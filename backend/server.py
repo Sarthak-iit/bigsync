@@ -5,11 +5,7 @@ from algorithms.main import FaultDetection
 from algorithms.main import EventClassification
 import json
 
-a = EventClassification('/Users/rishavkumar/Desktop/BTP/testing_files/test1/f1.csv',2)
-print(a.classifyEvents())
-
 app = Flask(__name__)
-
 # Allow requests from all origins
 CORS(app)
 
@@ -24,11 +20,13 @@ def upload():
         return "No file found"
     file = request.files['file']
     windowSize = float(request.form['windowSize']) if 'windowSize' in request.form else None
+    sd_th = float(request.form['sd_th']) if 'sd_th' in request.form else None
+    print(request.form)
     if file.filename == '':
         return "No selected file"
     if file:
         faultDetection = FaultDetection()
-        res = faultDetection.getFault(file,windowSize)
+        res = faultDetection.getFault(file,windowSize,sd_th)
         # res = algorithm(file,windowSize,0.025)
         if(res):
             data_freq = res[0].tolist()
@@ -39,6 +37,18 @@ def upload():
             return {"fault":True,"freq":data_freq, "time":data_time,"rocof":data_rocof}
         else:
             return {"fault":False}
+@app.route('/classifyEvent',methods=['POST'])
+def classifyEvent():
+    if 'file' not in request.files:
+        return "No file found"
+    file = request.files['file']
+    if file.filename == '':
+        return "No selected file"
+    if file:
+        eventClasify =  EventClassification(file)
+        return eventClasify.classifyEvents()
+
+
 
 if __name__ == '__main__':
     app.run(port=5000)

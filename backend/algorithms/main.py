@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
-
 class FaultDetection:
     def __init__(self):
         # initialising system parameters in contructor
-        self._rocof_sd_threshold = 0.025
         self._T = 0.02
         self._Q = np.array([[0.001, 0], [0, 1]])
         self._R = 0.01
@@ -51,12 +49,15 @@ class FaultDetection:
     
     def _readCSV(self,file):
         data = pd.read_csv(file)
-        freq_data = data["Mumbai"].to_numpy().flatten()
-        time_data = data["timestamp"].to_numpy().flatten()
+
+        time_data = data["time"].to_numpy().flatten()
+        freq_data = data["frequency"].to_numpy().flatten()
         return [freq_data,time_data]
     
-    def getFault(self,file,win_size):
+    def getFault(self,file,win_size,sd_th):
         data = self._readCSV(file)
+        self._rocof_sd_threshold = sd_th
+        print(self._rocof_sd_threshold)
         freq_data = data[0]
         time_data = data[1]
 
@@ -80,7 +81,7 @@ class FaultDetection:
         return None
 
 class EventClassification(FaultDetection):
-    def __init__(self,file,window_size):
+    def __init__(self,file):
         self.file = file
         self._KalmanFilter = FaultDetection._KalmanFilter
         # Events
@@ -89,9 +90,7 @@ class EventClassification(FaultDetection):
         self.isLoadLossEvent = False
         self.isOscillatoryEvent = False
         self.isIslandingEvent = False
-
         self._rocof_th = 2
-        self.window_size = window_size
         self._readFile()
 
     def _readFile(self):
@@ -118,10 +117,10 @@ class EventClassification(FaultDetection):
             max_rocof = max(rocof_data)
             if((max_rocof)>self._rocof_th):
                 self.isImpulseEvent = True
-                return None
+                return [rocof_data.tolist(),time_data[i:i+win_size].tolist()]
             i += win_size
-        return None
-    
+        return []
+
     def _stepChangeEvent(self):
         time_data = self._time_data
         win_size = 20
@@ -146,10 +145,14 @@ class EventClassification(FaultDetection):
                 slope_avg = np.mean(gradient)
                 if slope_avg > 0:
                     self.isGenLossEvent = True
+                    return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'gen']
                 else:
                     self.isLoadLossEvent = True
+                    return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'load']
+                
             i += win_size
-        return None
+            
+        return [[],[]]
     def _oscillatoryEvent(self):
         P_th = 5
         time_data = self._time_data
@@ -176,22 +179,30 @@ class EventClassification(FaultDetection):
                 elif f>4:
                     break
                 else:
-                    power_spectrum_db[j] > P_th
-                    self.isOscillatoryEvent = True
+                    if power_spectrum_db[j] > P_th:
+                        self.isOscillatoryEvent = True
+                        return [power_spectrum_db.tolist(),frequencies.tolist()]
             i += win_size
+        return [[],[]]
     def _islandingEvent(self):
-        return
+        return [[],[]]
 
 
 
         
     
     def classifyEvents(self):
-        self._impulseEvent()
-        self._stepChangeEvent()
-        self._oscillatoryEvent()
-        self._islandingEvent()
-        return {"impulse":self.isImpulseEvent,"genLoss":self.isGenLossEvent,"loadLoss":self.isLoadLossEvent,"oscillatory":self.isOscillatoryEvent,"islanding":self.isIslandingEvent}
-    
+        impulse_data = self._impulseEvent()
+        stepChangeData = self._stepChangeEvent()
+        if stepChangeData[-1] == 'gen':
+            genLossEventData = stepChangeData[:len(stepChangeData)-1]
+            loadLossEventData = [[],[]]
+        else:
+            loadLossEventData = stepChangeData[:len(stepChangeData)-1]
+            genLossEventData = [[],[]]
+        oscialltoryEventData = self._oscillatoryEvent()
+        islandingData = self._islandingEvent()
+        res = {"Impulse event":self.isImpulseEvent,"Generation Loss Event":self.isGenLossEvent,"Load Loss Event":self.isLoadLossEvent,"Oscillatory Event":self.isOscillatoryEvent,"Islanding Event":self.isIslandingEvent}
+        return {'data':[genLossEventData,impulse_data,islandingData,loadLossEventData,oscialltoryEventData],'result':res}    
         
 
