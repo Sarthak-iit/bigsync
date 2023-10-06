@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 class FaultDetection:
     def __init__(self):
-        # initialising system parameters in contructor
         self._T = 0.02
         self._Q = np.array([[0.001, 0], [0, 1]])
         self._R = 0.01
@@ -46,23 +45,18 @@ class FaultDetection:
         end_idx = n - n2
         v = v[start_idx:end_idx]
         return v
-    
-    def _readCSV(self,file):
-        data = pd.read_csv(file)
 
-        time_data = data["time"].to_numpy().flatten()
-        freq_data = data["frequency"].to_numpy().flatten()
-        return [freq_data,time_data]
     
-    def getFault(self,file,win_size,sd_th):
-        data = self._readCSV(file)
+    def getFault(self,data,win_size,sd_th):
         self._rocof_sd_threshold = sd_th
         print(self._rocof_sd_threshold)
         freq_data = data[0]
         time_data = data[1]
-
+        print(type(win_size),type(freq_data),type(time_data))
+        time_data = time_data
+        freq_data = freq_data
         # getting window size of scanning from seconds provided by user
-
+       
         win_size = int(len(time_data)/((time_data[-1]-time_data[0])/win_size))
         duration = time_data[-1] - time_data[0]
         n_samples = len(time_data)
@@ -81,8 +75,9 @@ class FaultDetection:
         return None
 
 class EventClassification(FaultDetection):
-    def __init__(self,file):
-        self.file = file
+    def __init__(self,data):
+        self._time_data = np.array(data[0]['time'])
+        self._freq_data = np.array(data[0]['data'])
         self._KalmanFilter = FaultDetection._KalmanFilter
         # Events
         self.isImpulseEvent = False
@@ -91,15 +86,6 @@ class EventClassification(FaultDetection):
         self.isOscillatoryEvent = False
         self.isIslandingEvent = False
         self._rocof_th = 2
-        self._readFile()
-
-    def _readFile(self):
-        file = self.file
-        data = pd.read_csv(file)
-        time_data = data["time"].to_numpy().flatten()
-        freq_data = data["frequency"].to_numpy().flatten()
-        self._freq_data = freq_data
-        self._time_data = time_data
 
     def _impulseEvent(self):
         time_data = self._time_data
@@ -141,6 +127,8 @@ class EventClassification(FaultDetection):
             t_min = curr_time_data[f_min_index]
             # 
             if((t_max - t_min) > 10 and (f_max - f_min) > 0.1):
+                print("t_max, t_min",t_max,t_min)
+                print("f_max, f_min",f_max,f_min)
                 gradient = np.gradient(curr_data)
                 slope_avg = np.mean(gradient)
                 if slope_avg > 0:
@@ -151,6 +139,7 @@ class EventClassification(FaultDetection):
                     return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'load']
                 
             i += win_size
+            
             
         return [[],[]]
     def _oscillatoryEvent(self):
@@ -184,12 +173,44 @@ class EventClassification(FaultDetection):
                         return [power_spectrum_db.tolist(),frequencies.tolist()]
             i += win_size
         return [[],[]]
-    def _islandingEvent(self):
+    def islandingEvent(self,data):
+        f_th = 0.1 
+        time_data = data[0]
+        freqs_data = data[1]
+        for x in range(len(freqs_data)):
+            freqs_data[x] = freqs_data[x]
+        win_size = 10
+        win_size = int(len(time_data)/((time_data[-1]-time_data[0])/win_size))
+        duration = time_data[-1] - time_data[0]
+        n_samples = len(time_data)
+        k = duration/n_samples
+        time_data = np.linspace(0,duration,n_samples)    
+        i = 0
+        while(i < len(freqs_data[0])):
+            # curr_data = self._freq_data[i:i+win_size]
+            f_max_s = freqs_data[0][i]
+            f_max_e = freqs_data[0][i+win_size-1]
+            f_min_s = freqs_data[0][i]
+            f_min_e = freqs_data[0][i+win_size-1]
+            for j in range(len(freqs_data)):
+                f_max_s = max(freqs_data[j][i],f_max_s)
+                f_max_e = max(freqs_data[j][i+win_size-1],f_max_e)
+                f_min_s = min(freqs_data[j][i],f_min_s)
+                f_min_e = min(freqs_data[j][i+win_size-1],f_min_e)
+            del_fs = f_max_s - f_min_s
+            del_fe = f_max_e - f_min_e
+            r = []
+            print(f_max_s,f_max_e,f_min_s,f_min_e)
+            if(del_fs < f_th and del_fe > f_th):
+                for x in range(len(freqs_data)):
+                    r.append(freqs_data[x][i:i+win_size])
+                res = {"Impulse event":'NA',"Generation Loss Event":'NA',"Load Loss Event":'NA',"Oscillatory Event":'NA',"Islanding Event":True}
+                return {'data':[[[],[]],[[],[]],[r,time_data[i:i+win_size].tolist()],[[],[]],[[],[]]],'result':res}
+            i += win_size
+            res = {"Impulse event":'NA',"Generation Loss Event":'NA',"Load Loss Event":'NA',"Oscillatory Event":'NA',"Islanding Event":False}
+            return {'data':[[[],[]],[[],[]],[[],[]],[[],[]],[[],[]]],'result':res}
+
         return [[],[]]
-
-
-
-        
     
     def classifyEvents(self):
         impulse_data = self._impulseEvent()
@@ -201,8 +222,13 @@ class EventClassification(FaultDetection):
             loadLossEventData = stepChangeData[:len(stepChangeData)-1]
             genLossEventData = [[],[]]
         oscialltoryEventData = self._oscillatoryEvent()
-        islandingData = self._islandingEvent()
-        res = {"Impulse event":self.isImpulseEvent,"Generation Loss Event":self.isGenLossEvent,"Load Loss Event":self.isLoadLossEvent,"Oscillatory Event":self.isOscillatoryEvent,"Islanding Event":self.isIslandingEvent}
+        islandingData = [[],[]]
+        res = {"Impulse event":self.isImpulseEvent,"Generation Loss Event":self.isGenLossEvent,"Load Loss Event":self.isLoadLossEvent,"Oscillatory Event":self.isOscillatoryEvent,"Islanding Event":'NA'}
         return {'data':[genLossEventData,impulse_data,islandingData,loadLossEventData,oscialltoryEventData],'result':res}    
         
+
+
+
+
+
 

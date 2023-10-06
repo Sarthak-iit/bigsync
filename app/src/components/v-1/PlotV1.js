@@ -1,4 +1,4 @@
-// import * as React from 'react';
+import { useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
@@ -6,7 +6,6 @@ import Alert from '@mui/material/Alert';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import { useState } from 'react';
 export default function Chart(props) {
     const minDistance = 5;
     const x_data = props.data.time;

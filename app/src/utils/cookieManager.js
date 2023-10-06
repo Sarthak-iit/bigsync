@@ -6,7 +6,6 @@ const setCookie = (data)=> {
     else{
         let temp = Cookies.get('bigsyncData');
         temp = temp.split(',')
-        console.log(temp)
         data.forEach((d)=>{
             temp.push(d)
         })
