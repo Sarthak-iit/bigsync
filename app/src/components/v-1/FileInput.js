@@ -7,6 +7,7 @@ function FileInput(props) {
     // const [selectedFile,setSelectedFile] = useState(null);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+        console.log('HI')
         setSelectedFile(file); // Store the selected file in the context
         
       };

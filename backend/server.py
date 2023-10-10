@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,jsonify
 from flask_cors import CORS
 import pandas as pd
 from algorithms.main import FaultDetection 
@@ -11,7 +11,13 @@ import json
 app = Flask(__name__)
 # Allow requests from all origins
 CORS(app)
-
+@app.errorhandler(Exception)
+def handle_generic_error(e):
+    # Log the error for debugging purposes
+    app.logger.error(str(e))
+    
+    # Return a generic error response with a 500 status code
+    return jsonify({'error': 'An unexpected error occurred'}), 500
 # 
 @app.route('/')
 def index():
@@ -23,13 +29,12 @@ def index():
  
 def upload():
     if 'file' not in request.files:
-        return "No file found"
+        return jsonify({"error": "File not provided"}), 400
     file = request.files['file']
     windowSize = float(request.form['windowSize']) if 'windowSize' in request.form else None
     sd_th = float(request.form['sd_th']) if 'sd_th' in request.form else None
-    print(request.form)
     if file.filename == '':
-        return "No selected file"
+        return jsonify({"error": "File not found"}), 400
     if file:
         faultDetection = FaultDetectionV1()
         res = faultDetection.getFault(file,windowSize,sd_th)
@@ -37,8 +42,6 @@ def upload():
         if(res):
             data_freq = res[0].tolist()
             data_rocof = res[1].tolist()
-            # data_sd_rocof = res[2].tolist()
-            # data_sd_rocof = data_sd_rocof + [0] * (len(data_freq) - len(data_sd_rocof))
             data_time = res[2].tolist()
             return {"fault":True,"freq":data_freq, "time":data_time,"rocof":data_rocof}
         else:
@@ -47,10 +50,10 @@ def upload():
 @app.route('/v1/classify-event',methods=['POST'])
 def classifyEvent():
     if 'file' not in request.files:
-        return "No file found"
+        return jsonify({"error": "File not provided"}), 400
     file = request.files['file']
     if file.filename == '':
-        return "No selected file"
+        return jsonify({"error": "File not found"}), 400
     if file:
         eventClasify =  EventClassificationV1(file)
         return eventClasify.classifyEvents()
@@ -61,18 +64,23 @@ def classifyEvent():
 @app.route('/v2/classify-event',methods=['POST'])
 def classifyEventData():
     body = request.get_json()
-    # Access the body sent from the client
+    if(not(body or body['time'] or body['data'])):
+        return jsonify({"error": "Bad request from client!!!"}), 400
     time = body['time']
     data = body['data']
+    threshold_values = body['thresholdValues']
+    print(threshold_values)
+    
     # print(data)
     if time and data:
-        eventClasify =  EventClassification([body,time])
+        eventClasify =  EventClassification([body,time,threshold_values])
         return eventClasify.classifyEvents()
 
 @app.route('/v2/detect-event',methods=['POST'])
 def detectEvent():
     body = request.get_json()
-    # Access the body sent from the client
+    if(not(body or body['time'] or body['data'])):
+        return jsonify({"error": "Bad request from client!!!"}), 400
     time = body['time']
     data = body['data']
     windowSize = body['windowSize']
@@ -83,20 +91,21 @@ def detectEvent():
     if(res):
         data_freq = res[0].tolist()
         data_rocof = res[1].tolist()
-        # data_sd_rocof = res[2].tolist()
-        # data_sd_rocof = data_sd_rocof + [0] * (len(data_freq) - len(data_sd_rocof))
         data_time = res[2].tolist()
         return {"fault":True,"freq":data_freq, "time":data_time,"rocof":data_rocof}
     else:
         return {"fault":False}
+    
 @app.route('/v2/detect-islanding-event',methods=['POST'])
 def detectIslandingEvent():
     body = request.get_json()
-    # Access the body sent from the client
+    if(not(body or body['time'] or body['data'])):
+        return jsonify({"error": "Bad request from client!!!"}), 400
     time = body['time']
     datas = body['data']
+    threshold_values = body['thresholdValues']
     if time and datas:
-        eventClasify =  EventClassification([body,time])
+        eventClasify =  EventClassification([body,time,threshold_values])
         res = eventClasify.islandingEvent([time,datas])
         return res
 

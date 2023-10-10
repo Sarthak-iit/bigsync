@@ -18,14 +18,66 @@ import HomeIcon from '@mui/icons-material/Home';
 import HistoryIcon from '@mui/icons-material/History';
 import BalanceIcon from '@mui/icons-material/Balance';
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
-export default function NavBar(props) {
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import formatData from '../utils/formatData';
+import parseCSV from '../utils/parseCSV';
+
+const Navabar = (props) => {
+  const navigate = useNavigate();
+  // const [selectedFile, setSelectedFile] = useState();
+  const [isLoading, setisLoading] = useState(false);
+  const [subLnData, setSubLnData] = useState({});
+  const [data, setData] = useState([]);
+  const [time, setTime] = useState([]);
+  const handleImportNewFileButton = async (selectedFile) => {
+    if (true) {
+      setisLoading(true);
+      try {
+        var data = await parseCSV(selectedFile);
+        var time;
+        [time, data] = await formatData(data);
+        setData(data);
+        setTime(time);
+        const sub = Object.keys(data);
+        const subLnData = {};
+        for (const item of sub) {
+          const parts = item.split(':');
+          const subKey = `Sub:${parts[1]}`;
+          const lnValue = parts[2] + ':' + parts[3];
+          if (!subLnData[subKey]) {
+            subLnData[subKey] = [];
+          }
+          subLnData[subKey].push(lnValue);
+        }
+        setSubLnData(subLnData);
+        setisLoading(false);
+
+        navigate('/analyse', {
+          state: [subLnData, data, time],
+        });
+
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  }
+  const handleImportFile =  (event) => {
+    const file = event.target.files[0];
+    // setSelectedFile(file); // Store the selected file in the context
+     handleImportNewFileButton(file);
+    
+  }
+
+  // 
   props = props.props;
   const colorMode = props[0];
   const setColorMode = props[1];
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon/>,<TroubleshootIcon/>,<BalanceIcon/>,<HistoryIcon/>]
+  const icons = [<HomeIcon />, <TroubleshootIcon />, <BalanceIcon />, <HistoryIcon />, <HistoryIcon />]
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -36,7 +88,7 @@ export default function NavBar(props) {
   };
 
   const list = (
-    <Box
+<Box
       sx={{ width: 250 }}
       role="presentation"
       onClick={toggleDrawer(false)}
@@ -45,19 +97,17 @@ export default function NavBar(props) {
       <List>
         {[
           { text: 'Home', href: '/' },
-          { text: 'Detect Event', href: '/detect-event'},
+          { text: 'Detect Event', href: '/detect-event' },
           { text: 'Classify Event', href: '/classify-event' },
           { text: 'Detected event history', href: '/detected-event-history' },
-          
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding>
-
-            <ListItemButton component="a" href={item.href}>
-            <ListItemIcon>
-              {icons[index]}
-            </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
+            
+              <ListItemButton component="a" href={item.href}>
+                <ListItemIcon>{icons[index]}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            
           </ListItem>
         ))}
       </List>
@@ -88,8 +138,16 @@ export default function NavBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             BigSync
           </Typography>
-          <Button color="inherit" href="/">Home</Button>
-          <Button color="inherit" href="/detected-event-history">History</Button>
+          <input type="file" id="fileInputNav" accept=".csv" onChange={handleImportFile} style={{display:'none'}}/>
+          <label htmlFor="fileInputNav">
+            <Button
+              color="inherit"
+              component="span"
+              sx={{ margin: 2 }}
+            >
+              Import New File
+            </Button>
+          </label>
           <Button
             sx={{ ml: 1 }}
             onClick={() =>
@@ -105,6 +163,7 @@ export default function NavBar(props) {
         </Toolbar>
       </AppBar>
     </Box>
-  );
-}
+  )
+};
 
+export default Navabar

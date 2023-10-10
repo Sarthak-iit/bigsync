@@ -15,13 +15,14 @@ export default function Chart(props) {
         return `${(x_data[0] + (x_data[x_data.length - 1] - x_data[0]) / (x_data.length / a) * value).toFixed(3)} sec`;
 
     }
+    
     const graphToggleLabel = ["Frequency","ROCOF"]
     const graphToggleColor = ["orange","purple"]
     const [plotType, setPlotType] = useState(0);
     const [value, setValue] = useState([0, 100]);
     const [y, setY] = useState(y_data[plotType])
     const [x, setX] = useState(x_data)
-
+    console.log(x.length,y.length)
 
     
     const handleChangeToggle = (event, whatToPlot) => {
@@ -54,6 +55,7 @@ export default function Chart(props) {
             setValue(newValue);
             setX(x_data.slice(Number(value[0] * a), Number(value[1]) * a))
             setY(y_data[plotType].slice(Number(value[0] * a), Number(value[1]) * a))
+            console.log('hihi',Number(value[0] * a), Number(value[1]) * a)
         }
 
     };

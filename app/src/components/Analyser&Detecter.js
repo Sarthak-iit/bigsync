@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-concat */
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Grid, Typography, Button, Divider,Alert } from '@mui/material';
+import { Checkbox, Grid, Typography, Button, Divider, Alert, TextField } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
@@ -10,13 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import DiscreteSlider from './Slider';
 import dataToServer from '../utils/dataToServer'
 import classifyEventData from '../utils/classifyEventV2';
+import AlertDialog from './ErrorAlert'
+import ThresholdForm from './ThresholdForm';
 const serverAddress = 'http://localhost:5000/';
 function Analyser() {
 
     // ------------ Getting csv Data -----------------//
     const navigate = useNavigate();
     const location = useLocation();
-    const [subLnData, data, time] = location.state;
+    const [subLnData, data, time] = location.state || [null, null, null];
 
     // -------------- Making state variables ------------//
     const [selectedSub, setSelectedSub] = useState(null);
@@ -29,6 +31,14 @@ function Analyser() {
     const [buttonText, setButtonText] = useState("Detect event")
     const [plotData, setPlotData] = useState([[], []]);
     const [islandingEventData, setislandingEventData] = React.useState(null);
+    const [err_message, setErr_message] = React.useState(null);
+    const [reaadyToCheckEvents, setReadyToCheckEvents] = React.useState(false);
+    const [thresholdValues, setThresholdValues] = useState({
+        stepChange: 0.1,
+        oscillatoryEvent: 5,
+        impulseEvent: 2,
+        islandingEvent: 0.1,
+    });
 
     let p1 = ['F', 'VM', 'VA', 'IM', 'IA']
     let p2 = ['Frequency', 'Voltage Magnitude', 'Voltage Angle', 'Current Magnitude', 'Current Angle']
@@ -64,19 +74,45 @@ function Analyser() {
         setislandingEventData([[], []])
     }
     const sendToServer = async (e) => {
-
         console.log(selectedSub, selectedLine)
         const serverData = await dataToServer([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + '/v2/detect-event', windowSize, sd_th);
+        console.log('serverData', serverData);
+        if (serverData.error) {
+            if (serverData.error.message) {
+                console.log(serverData.error)
+                setErr_message(serverData.error.message);
+            }
+            else {
+                setErr_message(serverData.error.message);
+            }
+
+            return
+        }
         // server return faultdata if fault is there and fault:none of fault is not there
         if (serverData) {
-            console.log(serverData);
             setfaultData(serverData);
             setPlotData([[], []]);
             setButtonText('Classify event');
             setMode(2);
         }
         else {
+
             setfaultData(null);
+        }
+    }
+    const handleClassifyEvent = async (e) => {
+
+        const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + '/v2/classify-event');
+        console.log('classifiedData',classifiedData)
+        if(classifiedData.error){
+            setErr_message(classifiedData.error.message);
+        }
+        else{
+
+            navigate('/classify-event', {
+                state: classifiedData,
+            })
+
         }
     }
     const handleClassifyIslandingEvent = async (e) => {
@@ -85,7 +121,7 @@ function Analyser() {
         islandingEventData.forEach((d) => {
             array.push(data[d]['F'])
         })
-        const serverData = await dataToServer([time, array], serverAddress + '/v2/detect-islanding-event', windowSize, sd_th);
+        const serverData = await dataToServer([time, array, thresholdValues], serverAddress + '/v2/detect-islanding-event', windowSize, sd_th);
         if (serverData) {
 
             navigate('/classify-event', {
@@ -108,24 +144,11 @@ function Analyser() {
         console.log('mode->0')
         setMode(0);
         setfaultData(null);
-        setButtonText('Detect fault');
+        setButtonText('Detect Event');
     }, [property, selectedLine, selectedSub])
-    const handleClassifyEvent = async (e) => {
 
-        const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + '/v2/classify-event');
-        if (classifiedData) {
-
-            navigate('/classify-event', {
-                state: classifiedData,
-            })
-
-        }
-        else {
-            // navigate('/classify', {
-            //   state: data,
-            // });
-
-        }
+    if (!data) {
+        return null;
     }
 
     // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
@@ -133,7 +156,8 @@ function Analyser() {
 
     return (
         <Grid container justifyContent={'space-between'} margin={1} width={'99%'}>
-            {!data&&<Alert severity="error">No Data found analyze !!</Alert>}
+            {!data && <Alert severity="error">No Data found to analyze !!</Alert>}
+            {err_message && <AlertDialog props={[err_message, setErr_message]} />}
             <Grid container item xs={1.5} direction='column' alignContent={'flex-start'}>
                 <Grid >
                     <Grid item xs={2} direction='column' justifyContent={'center'} alignItems={'center'}>
@@ -189,10 +213,10 @@ function Analyser() {
                     {mode === 1 && selectedSub && selectedLine && property === 'F' && (
                         <Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{buttonText}</Button>
                     )}
-                    {mode === 2 && selectedSub && selectedLine && property === 'F' && (
+                    {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && (
                         <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyEvent}>{buttonText}</Button>
                     )}
-                    {mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData[0].length > 0 && (
+                    {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData[0].length > 0 && (
                         <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyIslandingEvent}>{'Detect islanding event '}</Button>
                     )}
 
@@ -224,7 +248,13 @@ function Analyser() {
                     ))}
                 </FormGroup>
                 <Button variant="contained" size='small' onClick={resetPlotData}>Reset plot data</Button>
+                <Grid container direction={'column'} marginTop={10}>
+                    {mode === 2 && selectedSub && selectedLine && property === 'F' && <Typography variant="h6">Threshold values</Typography>}
+                    {mode === 2 && selectedSub && selectedLine && property === 'F' &&
+                        <ThresholdForm  values={thresholdValues} setValues={setThresholdValues} setReadyToCheckEvents={setReadyToCheckEvents}> </ThresholdForm>}
+                </Grid>
             </Grid>
+
         </Grid >
 
     );

@@ -3,7 +3,7 @@ import { useNavigate,useLocation } from 'react-router-dom';
 import { Button, Typography, Box, Alert } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import csvToServer from '../../utils/v1/csvToServer'
-import Chart from './PlotV1'
+import PlotlyPlot from '../PlotV2';
 import LinearBuffer from '../Loading';
 import DiscreteSlider from '../Slider';
 import classifyEvent from '../../utils/v1/classifyEvent';
@@ -44,6 +44,7 @@ function DetectEvent() {
     // server return faultdata if fault is there and fault:none of fault is not there
     if (faultData) {
       setPlotData(faultData);
+      console.log(faultData)
       
       // load for 3 more seconds after getting data from server
       setTimeout(() => { setIsLoading(false);setButtonText("Classify event"); }, 3000);
@@ -138,7 +139,7 @@ function DetectEvent() {
       {sentToServer && !isLoading && !plotData && <Alert variant="filled" severity="error">Internal Server error</Alert>}
       {sentToServer && !isLoading && plotData && !plotData["fault"] && <Alert variant="filled" severity="success">No fault detected in uploaded data.</Alert>}
       {sentToServer && !isLoading && plotData && plotData["fault"] && (<Box component="center" >
-        <Chart data={plotData} ></Chart>
+        <PlotlyPlot props={[plotData.time,plotData.freq,'Time','Frequency','Faulty data']} ></PlotlyPlot>
       </Box>)}
     </Box>
   );

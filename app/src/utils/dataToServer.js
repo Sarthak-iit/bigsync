@@ -1,6 +1,6 @@
 import setCookie from "./cookieManager";
 
-const dataToServer = async([time,data],serverAddress,windowSize,sd_th) => {
+const dataToServer = async([time,data,thresholdValues],serverAddress,windowSize,sd_th) => {
     if (!time || !data) {
       alert('Please select a file.');
       return;
@@ -19,20 +19,26 @@ const dataToServer = async([time,data],serverAddress,windowSize,sd_th) => {
             data: data,
             windowSize: windowSize,
             sd_th: sd_th,
+            thresholdValues: thresholdValues||null
           }),
         });
+        console.log('response',response)
         if (response.ok) {
             const responseData = await response.json(); // Parse the response as JSON
             setCookie([new Date(),"success",responseData["fault"]]);
             return responseData;
         } 
         else{
-          setCookie([new Date(),"fail",null]);
-          return null;
+          setCookie([new Date(), "fail", null]);
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
       } catch (error) {
         console.error('Error:', error);
+        return {'error':{
+          message:error
+        }};
+        
       }
     };
 export default dataToServer

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 
 
 export default function DiscreteSlider(prop) {
-    let windowSize = prop.prop[0];
+    let windowSize = (prop.prop[0]).toFixed(3);
     let setwindowSize = prop.prop[1];
     let min = prop.prop[2][0]
     let max = prop.prop[2][1]
@@ -14,7 +14,7 @@ export default function DiscreteSlider(prop) {
     let label = prop.prop[3]
     let defaultValue = prop.prop[4]
     const valuetext = (value) => {
-        return `${Number(value / 10)} sec`;
+        return `${Number((value / 10).toFixed(3))} sec`;
     }
     const handleChange = (event, newValue) => { setwindowSize(Number(newValue / 10)); }
     return (
