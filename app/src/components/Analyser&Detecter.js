@@ -49,7 +49,7 @@ function Analyser() {
         console.log('Mode set to detect-event')
         setButtonText('Send To Server');
         setMode(0);
-
+ 
     }
     const appendDataSetToPlot = () => {
         if (selectedSub && selectedLine && property) {
@@ -64,9 +64,9 @@ function Analyser() {
             setPlotData(temp);
             setislandingEventData(temp);
             setMode(1);
-        }
-        else {
-            return;
+        } 
+        else { 
+            return;  
         }
     }
     const resetPlotData = () => {
@@ -75,7 +75,7 @@ function Analyser() {
     }
     const sendToServer = async (e) => {
         console.log(selectedSub, selectedLine)
-        const serverData = await dataToServer([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + '/v2/detect-event', windowSize, sd_th);
+        const serverData = await dataToServer([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + 'v2/detect-event', windowSize, sd_th);
         console.log('serverData', serverData);
         if (serverData.error) {
             if (serverData.error.message) {
@@ -102,7 +102,7 @@ function Analyser() {
     }
     const handleClassifyEvent = async (e) => {
 
-        const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + '/v2/classify-event');
+        const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + 'v2/classify-event');
         console.log('classifiedData',classifiedData)
         if(classifiedData.error){
             setErr_message(classifiedData.error.message);
@@ -121,7 +121,7 @@ function Analyser() {
         islandingEventData.forEach((d) => {
             array.push(data[d]['F'])
         })
-        const serverData = await dataToServer([time, array, thresholdValues], serverAddress + '/v2/detect-islanding-event', windowSize, sd_th);
+        const serverData = await dataToServer([time, array, thresholdValues], serverAddress + 'v2/detect-islanding-event', windowSize, sd_th);
         if (serverData) {
 
             navigate('/classify-event', {

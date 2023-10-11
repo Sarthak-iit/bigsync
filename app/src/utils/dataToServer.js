@@ -1,6 +1,7 @@
 import setCookie from "./cookieManager";
 
 const dataToServer = async([time,data,thresholdValues],serverAddress,windowSize,sd_th) => {
+    console.log('serverAddress',serverAddress);
     if (!time || !data) {
       alert('Please select a file.');
       return;

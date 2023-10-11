@@ -2,11 +2,12 @@
 
 # dependencies
 /app/node_modules
+/node_backend/node_modules
 /files
 /testing_files
 /.pnp
 .pnp.js
-/backend/.venv
+/old-flask-backend/.venv
 # testing
 /coverage
 
