@@ -12,7 +12,7 @@ import dataToServer from '../utils/dataToServer'
 import classifyEventData from '../utils/classifyEventV2';
 import AlertDialog from './ErrorAlert'
 import ThresholdForm from './ThresholdForm';
-const serverAddress = 'http://localhost:5000/';
+const serverAddress = 'https://bigsync.onrender.com/';
 function Analyser() {
 
     // ------------ Getting csv Data -----------------//
