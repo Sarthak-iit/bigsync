@@ -7,7 +7,7 @@ import PlotlyPlot from './PlotV2'
 const makeRows = (rows, object) => {
   const events = Object.keys(object);
   events.map((e, i) => {
-    let row = { id: i, eventName: e, isDetected: String(object[e]) }
+    let row = { id: i, eventName: e, isDetected: String(object[e])}
     rows.push(row);
   })
   return rows;

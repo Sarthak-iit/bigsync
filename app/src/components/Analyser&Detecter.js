@@ -89,7 +89,7 @@ function Analyser() {
             return
         }
         // server return faultdata if fault is there and fault:none of fault is not there
-        if (serverData) {
+        else if (!serverData.error) {
             setfaultData(serverData);
             setPlotData([[], []]);
             setButtonText('Classify event');
@@ -109,9 +109,13 @@ function Analyser() {
         }
         else{
 
-            navigate('/classify-event', {
+            if(classifiedData)
+            {navigate('/classify-event', {
                 state: classifiedData,
-            })
+            })}
+            else{
+                setErr_message('Internal server error!!');
+            }
 
         }
     }
@@ -122,7 +126,8 @@ function Analyser() {
             array.push(data[d]['F'])
         })
         const serverData = await dataToServer([time, array, thresholdValues], serverAddress + 'v2/detect-islanding-event', windowSize, sd_th);
-        if (serverData) {
+        console.log('islanding data',serverData)
+        if (serverData && !serverData.error) {
 
             navigate('/classify-event', {
                 state: serverData,
@@ -130,8 +135,7 @@ function Analyser() {
 
         }
         else {
-
-
+            setErr_message('Internal server error!!');
         }
     }
 

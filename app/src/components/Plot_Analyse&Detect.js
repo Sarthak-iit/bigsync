@@ -18,7 +18,7 @@ const AnalysePlot = (props) => {
     <Plot
       data={toPlot}
       layout={{
-        width: 1000, height: 450,
+        // width: 1000, height: 450,
         xaxis: {
           title: 'Time',
         },

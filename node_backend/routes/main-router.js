@@ -8,4 +8,6 @@ Router.route('/classify-event')
     .post(mainController.classifyEvent)
 Router.route('/detect-islanding-event')
     .post(mainController.classifyIslandingEvent)
-module.exports  = Router
+Router.route('/find-statistics')
+    .post(mainController.findStatistics)
+module.exports = Router

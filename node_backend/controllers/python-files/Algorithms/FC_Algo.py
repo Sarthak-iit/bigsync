@@ -1,5 +1,5 @@
 import numpy as np
-from FD_Algo import FaultDetection
+from Algorithms.FD_Algo import FaultDetection
 import json
 import math
 

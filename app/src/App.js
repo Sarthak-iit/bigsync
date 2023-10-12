@@ -8,6 +8,7 @@ import History from './Components/History'
 import Home from './Components/Home'
 import Classify from './Components/ClassifyEvent'
 import Analyser from './Components/Analyser&Detecter';
+import Baseliner from './Components/Baseliner';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/detect-event" element={<DetectEvent></DetectEvent>}></Route>
               <Route path="/detected-event-history" element={<History></History>}></Route>
               <Route path="/classify-event" element={<Classify></Classify>}></Route>
+              <Route path="/baseline" element={<Baseliner></Baseliner>}></Route>
             </Routes>
           </BrowserRouter>
         </div>
