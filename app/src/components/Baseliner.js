@@ -10,7 +10,7 @@ import dataToServer from '../utils/dataToServer'
 import AlertDialog from './ErrorAlert'
 import MyBarChart from './Barchart';
 
-const serverAddress = 'https://bigsync.onrender.com/';
+const serverAddress = 'http://localhost:5000/';
 function Baseliner() {
 
     // ------------ Getting csv Data -----------------//

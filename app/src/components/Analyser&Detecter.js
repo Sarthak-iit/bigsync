@@ -12,7 +12,7 @@ import dataToServer from '../utils/dataToServer'
 import classifyEventData from '../utils/classifyEventV2';
 import AlertDialog from './ErrorAlert'
 import ThresholdForm from './ThresholdForm';
-const serverAddress = 'https://bigsync.onrender.com/';
+const serverAddress = 'http://localhost:5000/';
 function Analyser() {
 
     // ------------ Getting csv Data -----------------//
@@ -79,17 +79,16 @@ function Analyser() {
         console.log('serverData', serverData);
         if (serverData.error) {
             if (serverData.error.message) {
-                console.log(serverData.error)
-                setErr_message(serverData.error.message);
+                setErr_message("Server error while detecting");
             }
             else {
-                setErr_message(serverData.error.message);
+                setErr_message("Server error while detecting");
             }
 
             return
         }
         // server return faultdata if fault is there and fault:none of fault is not there
-        else if (!serverData.error) {
+        else if (serverData && !serverData.error) {
             setfaultData(serverData);
             setPlotData([[], []]);
             setButtonText('Classify event');
@@ -98,6 +97,7 @@ function Analyser() {
         else {
 
             setfaultData(null);
+            setErr_message("Server error while detecting");
         }
     }
     const handleClassifyEvent = async (e) => {
