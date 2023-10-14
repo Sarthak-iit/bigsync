@@ -163,7 +163,7 @@ class EventClassification(FaultDetection):
                     for x in range(len(freqs_data)):
                         r.append(freqs_data[x][i:i+win_size])
                     res = {"Impulse event":'NA',"Generation Loss Event":'NA',"Load Loss Event":'NA',"Oscillatory Event":'NA',"Islanding Event":True}
-                    return {'data':[[[],[]],[[],[]],[r,time_data[i:i+win_size].tolist()],[[],[]],[[],[]]],'result':res}
+                    return {'data':[[[],[]],[[],[]],[[],[]],[[],[]],[r,time_data[i:i+win_size].tolist()]],'result':res}
                 i += win_size
                 res = {"Impulse event":'NA',"Generation Loss Event":'NA',"Load Loss Event":'NA',"Oscillatory Event":'NA',"Islanding Event":False}
                 return {'data':[[[],[]],[[],[]],[[],[]],[[],[]],[[],[]]],'result':res}

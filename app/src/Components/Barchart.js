@@ -1,19 +1,33 @@
 import React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import Plot from 'react-plotly.js';
 
+function MyBarChart({ values, xData }) {
+  // Create a trace for the bar chart
+  const trace = {
+    x: xData,
+    y: values,
+    type: 'bar',
+  };
 
-function MyBarChart({values,xData}) {
-    const xAxis = [{ scaleType: 'band', data:xData ,categoryGapRatio: 0.5}];
-    const series = [{ data: values }];
-    return (
-        <BarChart
-        
-            xAxis={xAxis}
-            series={series}
-            width={500}
-            height={300}
-        />
-    );
+  // Create a layout for the chart
+  const layout = {
+    width: 500,
+    height: 300,
+    title: 'Bar Chart',
+    xaxis: {
+      title: 'X-Axis Label',
+    },
+    yaxis: {
+      title: 'Y-Axis Label',
+    },
+  };
+
+  return (
+    <Plot
+      data={[trace]}
+      layout={layout}
+    />
+  );
 }
 
 export default MyBarChart;

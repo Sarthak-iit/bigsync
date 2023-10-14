@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-concat */
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Grid, Typography, Button, Divider, Alert, TextField } from '@mui/material';
+import { Checkbox, Grid, Typography, Button, Divider, Alert } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import DiscreteSlider from './Slider';
 import dataToServer from '../utils/dataToServer'
 import classifyEventData from '../utils/classifyEventV2';
-import AlertDialog from './ErrorAlert'
 import ThresholdForm from './ThresholdForm';
+import AlertDialog from './ErrorAlert'
 const serverAddress = 'http://localhost:5000/';
 function Analyser() {
 
@@ -210,7 +210,7 @@ function Analyser() {
                 <Grid >
 
                     {(!faultData || (mode === 0)) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
-                    {(faultData && mode && mode !== 0) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No fault detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
+                    {(faultData && mode && mode !== 0) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
                 </Grid>
                 <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
                     {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}

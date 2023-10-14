@@ -2,7 +2,6 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
-import EventPlot from './EventPlot'
 import PlotlyPlot from './PlotV2'
 const makeRows = (rows, object) => {
   const events = Object.keys(object);

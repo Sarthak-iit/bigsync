@@ -2,34 +2,40 @@ import React, { useEffect } from 'react';
 import Plot from 'react-plotly.js';
 
 const PlotlyPlot = (props) => {
-  console.log(props.props)
-  const [ xData, yData,xLabel,yLabel,title ] = props.props;
-  console.log('title',title)
-    // if (!xData || !yData || xData.length !== yData.length) {
-    //   return;
-    // }
+  const [xData, yData, xLabel, yLabel, title] = props.props;
+  console.log('title', title);
 
-    return (
-        <Plot
-          data={[
-      {
+  // Check if yData is an array or an array of arrays
+  const traces = Array.isArray(yData[0])
+    ? yData.map((y, index) => ({
         x: xData,
-        y: yData,
+        y,
         mode: 'lines',
-      },
-    ]}
-          layout={ {width: 1000, height: 450,title: title,
-          xaxis: {
+        name: `Data ${index + 1}`, // Customize the legend label
+      }))
+    : [
+        {
+          x: xData,
+          y: yData,
+          mode: 'lines',
+          name: 'Data 1', // Customize the legend label
+        },
+      ];
+
+  return (
+    <Plot
+      data={traces}
+      layout={{
+        title: title,
+        xaxis: {
           title: xLabel,
         },
         yaxis: {
           title: yLabel,
-        }
-          } }
-        />
-      )}
-
-    // Clean up the chart when the component unmounts
-    
+        },
+      }}
+    />
+  );
+};
 
 export default PlotlyPlot;

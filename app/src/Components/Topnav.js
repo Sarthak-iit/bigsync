@@ -115,9 +115,9 @@ const Navabar = (props) => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
+    <Box sx={{ flexGrow: 1 }} >
+      <AppBar position="static" variant="dense">
+        <Toolbar >
           <Drawer
             anchor="left"
             open={state.left}
