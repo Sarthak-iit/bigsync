@@ -1,7 +1,6 @@
 [build]
   base = "app"
   publish = "app/build"
-  functions = "node_backend"
 
 [context.production]
   command = "npm run build"
