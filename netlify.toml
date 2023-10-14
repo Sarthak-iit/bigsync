@@ -1,0 +1,11 @@
+[build]
+  base = "app"
+  publish = "app/build"
+  functions = "backend_node"
+
+[context.production]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+[context.deploy-preview]
+  command = "npm run build"
