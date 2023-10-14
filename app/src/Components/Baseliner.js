@@ -5,14 +5,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import dataToServer from '../utils/dataToServer'
 import AlertDialog from './ErrorAlert'
 import MyBarChart from './Barchart';
-
+import { styles } from '../styles';
 const serverAddress = 'http://localhost:5000/';
 function Baseliner() {
-
     // ------------ Getting csv Data -----------------//
     const location = useLocation();
     const [subLnData, data] = location.state || [null, null, null];
@@ -21,18 +20,19 @@ function Baseliner() {
     const [selectedSub, setSelectedSub] = useState(null);
     const [selectedLine, setSelectedLine] = useState(null);
     const [err_message, setErr_message] = React.useState(null);
-    const [statData, setStatData] = React.useState({ "Minimum": 0, "Maximum": 0, "Mean": 0, "99.5% Limit": 0, "99.9% Limit": 0 });
+    const [statData, setStatData] = React.useState({ 'freq': { "Minimum": 0, "Maximum": 0, "Mean": 0, "99.5% Limit": 0, "99.9% Limit": 0 }, 'rocof': { "Minimum": 0, "Maximum": 0, "Mean": 0, "99.5% Limit": 0, "99.9% Limit": 0 } });
     // making table rows
     const makeRows = (object) => {
         let rows = [];
-        const events = Object.keys(object);
-        events.map((e, i) => {
-            let row = { id: i, statName: e, value: Number(object[e]) }
+        const stats = Object.keys(object["freq"]);
+        stats.map((e, i) => {
+            let row = { id: i, statName: e, freq: Number(object["freq"][e]), rocof: Number(object["rocof"][e]) }
             rows.push(row);
         })
         return rows;
 
     }
+    console.log('statData', statData);
     let rows = makeRows(statData);
     let r = 0;
     const columns = [
@@ -43,8 +43,13 @@ function Baseliner() {
             width: '200',
         },
         {
-            field: 'value',
-            headerName: 'Value',
+            field: 'freq',
+            headerName: 'Frequency',
+            width: '200',
+        },
+        {
+            field: 'rocof',
+            headerName: 'ROCOF',
             width: '200',
         }
     ];
@@ -87,81 +92,85 @@ function Baseliner() {
     }, [statData])
 
     if (!data) {
-        return null;
+        return(<Alert severity="error">No Data found!!!, Please import a file</Alert>);
     }
 
     // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
     return (
-        <Grid container justifyContent={'space-between'} margin={1} width={'99%'}>
-            {!data && <Alert severity="error">No Data found to analyze !!</Alert>}
-            {err_message && <AlertDialog props={[err_message, setErr_message]} />}
-            <Grid container item xs={1.5} direction='column' alignContent={'flex-start'}>
-                <Grid >
-                    <Grid item xs={2} direction='column' justifyContent={'center'} alignItems={'center'}>
-                        <Typography variant="h6">Substations</Typography>
-                        <FormGroup>
-                            {Object.keys(subLnData).map((subKey) => (
-                                <FormControlLabel
-                                    key={subKey}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedSub === subKey}
-                                            onChange={() => { setSelectedSub(subKey); setSelectedLine(null) }}
-                                            size="caption"
-                                        />
-                                    }
-                                    label={subKey}
-                                />
-                            ))}
-                        </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                        {selectedSub && (
-                            <div>
-                                <Typography variant="h6">{selectedSub}:Lines</Typography>
-                                <FormGroup>
-                                    {subLnData[selectedSub].map((line) => (
-                                        <FormControlLabel
-                                            key={line}
-                                            control=
-                                            {<Checkbox size="caption" checked={selectedLine === line}
-                                                onChange={() => setSelectedLine(line)} />}
-                                            label={line}
+        <div style={styles.container}>
+            <div style={styles.flexContainer}>
+                {!data && <Alert severity="error">No Data found to analyze !!</Alert>}
+                {err_message && <AlertDialog props={[err_message, setErr_message]} />}
+                <Grid style={styles.flexItemB} >
+                    <Grid >
+                        <div style={styles.containerChild} >
+                             <Typography style={styles.label}>Substations</Typography>
+                            <FormGroup >
+                                {Object.keys(subLnData).map((subKey) => (
+                                    <FormControlLabel
+                                        key={subKey}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedSub === subKey}
+                                                onChange={() => { setSelectedSub(subKey); setSelectedLine(null) }}
+                                                size="caption"
+                                                margin={0}
+                                            />
+                                        }
+                                        label={subKey}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </div>
+                        <Grid style={styles.containerChild}>
+                            {selectedSub && (
+                                <div>
+                                     <Typography style={styles.label}>{selectedSub}:Lines</Typography>
+                                    <FormGroup>
+                                        {subLnData[selectedSub].map((line) => (
+                                            <FormControlLabel
+                                                key={line}
+                                                control=
+                                                {<Checkbox size="caption" checked={selectedLine === line}
+                                                    onChange={() => setSelectedLine(line)} />}
+                                                label={line}
 
-                                        />
-                                    ))}
-                                </FormGroup>
-                            </div>
-                        )}
+                                            />
+                                        ))}
+                                    </FormGroup>
+                                </div>
+                            )}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid >
-                <Grid >
-                    <Typography variant="h6">Statistics of {`${selectedSub}` + ':' + `${selectedLine}`}, Frequency data</Typography>
-                    <Grid container flexDirection="column" xs={3} mt={5}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSizeOptions={[2]}
-                            rowHeight={40}
-                            disableMultipleRowSelection={true}
-                        />
+                <Grid style={styles.flexItemB}>
+                    <Grid >
+                         <Typography style={styles.label}>Statistics of {`${selectedSub}` + ':' + `${selectedLine}`}, Frequency data</Typography>
+                        <Grid container flexDirection="column" xs={3} mt={5}>
+                            <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                pageSizeOptions={[2]}
+                                rowHeight={40}
+                                disableMultipleRowSelection={true}
+                            />
+                        </Grid>
+
+                    </Grid>
+                    <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
+                        {selectedSub && selectedLine && <Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{'Check Stats'}</Button>}
                     </Grid>
 
-                </Grid>
-                <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
-                    {selectedSub && selectedLine&&<Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{'Check Stats'}</Button>}
-                </Grid>
 
-
-            </Grid>
-            <Grid>
-            <MyBarChart xData={Object.keys(statData)} values={Object.values(statData)} />
-            </Grid>
-        </Grid >
+                </Grid>
+                <Grid style={styles.flexItemB} container direction={'column'}>
+                    <MyBarChart style={styles.flexItemB}xData={Object.keys(statData['freq'])} values={Object.values(statData['freq'])} title={'Frequency data stats'} />
+                    <MyBarChart style={styles.flexItemB} xData={Object.keys(statData['rocof'])} values={Object.values(statData['rocof'])} title={'ROCOF data stats'}/>
+                </Grid>
+            </div>
+        </div>
 
     );
 }

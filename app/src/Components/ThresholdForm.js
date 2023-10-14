@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import { styles } from '../styles';
 
 function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
   const [errors, setErrors] = useState({
@@ -41,9 +44,10 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
   };
 
   return (
-    <div>
-      <Grid mt={2} container direction={'column'} spacing={1}>
-        <TextField
+    <div style={styles.containerChild}>
+      <Typography  style={styles.label} variant="h6">Threshold values</Typography>
+      <div style={{display:'flex',flexDirection:'column', maxWidth:'60%'}}>
+        <TextField style={{'marginTop':2}}
           required
           error={errors.stepChange}
           helperText={errors.stepChange ? 'Enter a threshold' : ''}
@@ -54,7 +58,7 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
           value={values.stepChange}
           onChange={handleChange}
         />
-        <TextField
+        <TextField style={{'marginTop':2}}
           required
           error={errors.oscillatoryEvent}
           helperText={errors.oscillatoryEvent ? 'Enter a threshold' : ''}
@@ -65,7 +69,7 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
           value={values.oscillatoryEvent}
           onChange={handleChange}
         />
-        <TextField
+        <TextField style={{'marginTop':2}}
           required
           error={errors.impulseEvent}
           helperText={errors.impulseEvent ? 'Enter a threshold' : ''}
@@ -76,7 +80,7 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
           value={values.impulseEvent}
           onChange={handleChange}
         />
-        <TextField
+        <TextField style={{'marginTop':2}}
           required
           error={errors.islandingEvent}
           helperText={errors.islandingEvent ? 'Enter a threshold' : ''}
@@ -90,7 +94,7 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
         <Button variant="contained" color="primary" size='x' onClick={handleSubmit}>
           Set threshold
         </Button>
-      </Grid>
+      </div>
     </div>
   );
 }

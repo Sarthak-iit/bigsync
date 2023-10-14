@@ -2,8 +2,14 @@ import React, { useEffect } from 'react';
 import Plot from 'react-plotly.js';
 
 const PlotlyPlot = (props) => {
-  const [xData, yData, xLabel, yLabel, title] = props.props;
+  let [xData, yData, xLabel, yLabel, title] = props.props;
   console.log('title', title);
+
+  if (!xData || !yData || yData.length === 0) {
+    xData=[];
+    yData=[]
+
+  }
 
   // Check if yData is an array or an array of arrays
   const traces = Array.isArray(yData[0])

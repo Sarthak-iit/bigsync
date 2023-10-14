@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -16,15 +18,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import HistoryIcon from '@mui/icons-material/History';
-import BalanceIcon from '@mui/icons-material/Balance';
-import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import formatData from '../utils/formatData';
 import parseCSV from '../utils/parseCSV';
-
+import LinearBuffer from './Loading';
 const Navabar = (props) => {
   const navigate = useNavigate();
+  const currentPath = window.location.pathname;
+  console.log(currentPath);
   // const [selectedFile, setSelectedFile] = useState();
   const [isLoading, setisLoading] = useState(false);
   const [subLnData, setSubLnData] = useState({});
@@ -52,19 +54,27 @@ const Navabar = (props) => {
         }
         setSubLnData(subLnData);
         setisLoading(false);
-
-        navigate('/analyse', {
+        if(currentPath === '/baseline')
+        {navigate(currentPath, {
           state: [subLnData, data, time],
-        });
+        });}
+        else{
+          navigate('/analyse', {
+            state: [subLnData, data, time],
+          });
+        }
 
 
       } catch (error) {
+        
+
         console.error('Error:', error);
       }
     }
   }
   const handleImportFile =  (event) => {
     const file = event.target.files[0];
+    // console.log(this.props.location.pathname);
     // setSelectedFile(file); // Store the selected file in the context
      handleImportNewFileButton(file);
     
@@ -77,7 +87,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />, <TroubleshootIcon />, <BalanceIcon />, <HistoryIcon />, <HistoryIcon />]
+  const icons = [<HomeIcon />, <AnalyticsIcon />, <QueryStatsIcon />, <HistoryIcon />]
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -97,9 +107,10 @@ const Navabar = (props) => {
       <List>
         {[
           { text: 'Home', href: '/' },
-          { text: 'Detect Event', href: '/detect-event' },
-          { text: 'Classify Event', href: '/classify-event' },
+          { text: 'Analyse and Detect', href: '/analyse' },
+          { text: 'Baseline', href: '/baseline' },
           { text: 'Detected event history', href: '/detected-event-history' },
+          
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding>
             
@@ -162,7 +173,9 @@ const Navabar = (props) => {
           </Button>
         </Toolbar>
       </AppBar>
+      {isLoading && <LinearBuffer/>}
     </Box>
+    
   )
 };
 

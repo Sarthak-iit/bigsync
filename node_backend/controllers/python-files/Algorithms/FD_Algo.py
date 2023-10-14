@@ -83,7 +83,7 @@ class FaultDetection:
                 curr_data = freq_data[i:i+win_size]
                 kalman_filter_output = self._KalmanFilter(curr_data)
                 rocof_data = kalman_filter_output[2]
-                sd_rocof = np.std(curr_data)
+                sd_rocof = np.std(rocof_data)
                 if((sd_rocof)>self._rocof_sd_threshold):
                     return [kalman_filter_output[1],rocof_data,time_data[i:i+win_size]]
                 i += win_size

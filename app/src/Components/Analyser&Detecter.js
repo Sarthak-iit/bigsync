@@ -12,6 +12,8 @@ import dataToServer from '../utils/dataToServer'
 import classifyEventData from '../utils/classifyEventV2';
 import ThresholdForm from './ThresholdForm';
 import AlertDialog from './ErrorAlert'
+import { styles } from '../styles';
+
 const serverAddress = 'http://localhost:5000/';
 function Analyser() {
 
@@ -49,7 +51,7 @@ function Analyser() {
         console.log('Mode set to detect-event')
         setButtonText('Send To Server');
         setMode(0);
- 
+
     }
     const appendDataSetToPlot = () => {
         if (selectedSub && selectedLine && property) {
@@ -64,9 +66,9 @@ function Analyser() {
             setPlotData(temp);
             setislandingEventData(temp);
             setMode(1);
-        } 
-        else { 
-            return;  
+        }
+        else {
+            return;
         }
     }
     const resetPlotData = () => {
@@ -103,17 +105,18 @@ function Analyser() {
     const handleClassifyEvent = async (e) => {
 
         const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + 'v2/classify-event');
-        console.log('classifiedData',classifiedData)
-        if(classifiedData.error){
+        console.log('classifiedData', classifiedData)
+        if (classifiedData.error) {
             setErr_message(classifiedData.error.message);
         }
-        else{
+        else {
 
-            if(classifiedData)
-            {navigate('/classify-event', {
-                state: classifiedData,
-            })}
-            else{
+            if (classifiedData) {
+                navigate('/classify-event', {
+                    state: classifiedData,
+                })
+            }
+            else {
                 setErr_message('Internal server error!!');
             }
 
@@ -126,7 +129,7 @@ function Analyser() {
             array.push(data[d]['F'])
         })
         const serverData = await dataToServer([time, array, thresholdValues], serverAddress + 'v2/detect-islanding-event', windowSize, sd_th);
-        console.log('islanding data',serverData)
+        console.log('islanding data', serverData)
         if (serverData && !serverData.error) {
 
             navigate('/classify-event', {
@@ -141,6 +144,13 @@ function Analyser() {
 
     // --------------- useeffect -----------------------------------------------------//
 
+    useEffect(()=>{
+        if(mode === 0){
+            setButtonText('Detect event')
+        }
+
+    },[mode])
+
     useEffect(() => {
         resetPlotData();
     }, [property])
@@ -152,114 +162,116 @@ function Analyser() {
     }, [property, selectedLine, selectedSub])
 
     if (!data) {
-        return null;
+        return(<Alert severity="error">No Data found to analyze, Please import a file</Alert>);
     }
 
     // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
     return (
-        <Grid container justifyContent={'space-between'} margin={1} width={'99%'}>
-            {!data && <Alert severity="error">No Data found to analyze !!</Alert>}
-            {err_message && <AlertDialog props={[err_message, setErr_message]} />}
-            <Grid container item xs={1.5} direction='column' alignContent={'flex-start'}>
-                <Grid >
-                    <Grid item xs={2} direction='column' justifyContent={'center'} alignItems={'center'}>
-                        <Typography variant="h6">Substations</Typography>
-                        <FormGroup>
-                            {Object.keys(subLnData).map((subKey) => (
+        <div style={styles.container}>
+            <div style={styles.flexContainer}>
+                {!data && <Alert severity="error">No Data found to analyze !!</Alert>}
+                {err_message && <AlertDialog props={[err_message, setErr_message]} />}
+                <Grid style={styles.flexItem}>
+                    <Grid >
+                        <div style={styles.containerChild} >
+                            <Typography style={styles.label} variant="h6">Substations</Typography>
+                            <FormGroup>
+                                {Object.keys(subLnData).map((subKey) => (
+                                    <FormControlLabel
+                                        key={subKey}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedSub === subKey}
+                                                onChange={() => { setSelectedSub(subKey); setSelectedLine(null) }}
+                                                size="caption"
+                                            />
+                                        }
+                                        label={subKey}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </div>
+                        <Grid item style={styles.containerChild}>
+                            {selectedSub && (
+                                <div>
+                                    <Typography style={styles.label} variant="h6">{selectedSub}:Lines</Typography>
+                                    <FormGroup>
+                                        {subLnData[selectedSub].map((line) => (
+                                            <FormControlLabel
+                                                key={line}
+                                                control=
+                                                {<Checkbox size="caption" checked={selectedLine === line}
+                                                    onChange={() => setSelectedLine(line)} />}
+                                                label={line}
+
+                                            />
+                                        ))}
+                                    </FormGroup>
+                                </div>
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Button variant="contained" onClick={appendDataSetToPlot}>Add</Button>
+
+                </Grid>
+                <Grid style={styles.flexItem}>
+                    <Grid>
+
+                        {(!faultData || (mode === 0)) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
+                        {(faultData && mode && mode !== 0) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
+                    </Grid>
+                    <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
+                        {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}
+                        {mode === 1 && selectedSub && selectedLine && property === 'F' && (
+                            <Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{buttonText}</Button>
+                        )}
+                        {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && (
+                            <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyEvent}>{buttonText}</Button>
+                        )}
+                        {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData[0].length > 0 && (
+                            <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyIslandingEvent}>{'Detect islanding event '}</Button>
+                        )}
+
+                        {data && mode === 1 && property === 'F' && (
+                            <DiscreteSlider prop={[sd_th, setSd_th, [0.1, 1, 0.05], "ROCOF Standard deviation threshold", 0.025]} />
+                        )}
+                        {data && mode === 1 && property === 'F' && (
+                            <DiscreteSlider prop={[windowSize, setWindowSize, [10, 200, 10], "Window Size(sec)", 2]} />
+                        )}
+                    </Grid>
+
+
+                </Grid>
+                <Grid style={styles.flexItem}>
+                    <div style={styles.containerChild}>
+                        <Typography style={styles.label} variant="h6" >
+                            Properties
+                        </Typography>                        <FormGroup >
+                            {Object.keys(p1).map((p, i) => (
                                 <FormControlLabel
-                                    key={subKey}
+                                    key={p}
                                     control={
                                         <Checkbox
-                                            checked={selectedSub === subKey}
-                                            onChange={() => { setSelectedSub(subKey); setSelectedLine(null) }}
+                                            checked={property === p1[i]}
+                                            onChange={() => { setProperty(p1[i]) }}
                                             size="caption"
                                         />
                                     }
-                                    label={subKey}
+                                    label={p2[i]}
                                 />
                             ))}
                         </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                        {selectedSub && (
-                            <div>
-                                <Typography variant="h6">{selectedSub}:Lines</Typography>
-                                <FormGroup>
-                                    {subLnData[selectedSub].map((line) => (
-                                        <FormControlLabel
-                                            key={line}
-                                            control=
-                                            {<Checkbox size="caption" checked={selectedLine === line}
-                                                onChange={() => setSelectedLine(line)} />}
-                                            label={line}
+                    </div>
 
-                                        />
-                                    ))}
-                                </FormGroup>
-                            </div>
-                        )}
-                    </Grid>
-                </Grid>
-                <Divider></Divider>
-                <Button variant="contained" size='small' onClick={appendDataSetToPlot}>Add</Button>
-
-            </Grid>
-            <Grid >
-                <Grid >
-
-                    {(!faultData || (mode === 0)) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
-                    {(faultData && mode && mode !== 0) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
-                </Grid>
-                <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
-                    {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}
-                    {mode === 1 && selectedSub && selectedLine && property === 'F' && (
-                        <Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{buttonText}</Button>
-                    )}
-                    {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && (
-                        <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyEvent}>{buttonText}</Button>
-                    )}
-                    {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData[0].length > 0 && (
-                        <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyIslandingEvent}>{'Detect islanding event '}</Button>
-                    )}
-
-                    {data && mode === 1 && property === 'F' && (
-                        <DiscreteSlider prop={[sd_th, setSd_th, [0.1, 1, 0.05], "ROCOF Standard deviation threshold", 0.025]} />
-                    )}
-                    {data && mode === 1 && property === 'F' && (
-                        <DiscreteSlider prop={[windowSize, setWindowSize, [10, 200, 10], "Window Size", 2]} />
-                    )}
+                    <Button variant="contained" onClick={resetPlotData}>Reset plot data</Button>
+                        {mode === 2 && selectedSub && selectedLine && property === 'F' &&
+                            <ThresholdForm values={thresholdValues} setValues={setThresholdValues} setReadyToCheckEvents={setReadyToCheckEvents}> </ThresholdForm>}
                 </Grid>
 
-
-            </Grid>
-            <Grid>
-                <Typography variant="h6">Properties</Typography>
-                <FormGroup>
-                    {Object.keys(p1).map((p, i) => (
-                        <FormControlLabel
-                            key={p}
-                            control={
-                                <Checkbox
-                                    checked={property === p1[i]}
-                                    onChange={() => { setProperty(p1[i]) }}
-                                    size="caption"
-                                />
-                            }
-                            label={p2[i]}
-                        />
-                    ))}
-                </FormGroup>
-                <Button variant="contained" size='small' onClick={resetPlotData}>Reset plot data</Button>
-                <Grid container direction={'column'} marginTop={10}>
-                    {mode === 2 && selectedSub && selectedLine && property === 'F' && <Typography variant="h6">Threshold values</Typography>}
-                    {mode === 2 && selectedSub && selectedLine && property === 'F' &&
-                        <ThresholdForm  values={thresholdValues} setValues={setThresholdValues} setReadyToCheckEvents={setReadyToCheckEvents}> </ThresholdForm>}
-                </Grid>
-            </Grid>
-
-        </Grid >
+            </div>
+        </div>
 
     );
 }

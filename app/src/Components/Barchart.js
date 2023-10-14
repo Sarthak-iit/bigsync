@@ -1,7 +1,7 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-function MyBarChart({ values, xData }) {
+function MyBarChart({ values, xData,title }) {
   // Create a trace for the bar chart
   const trace = {
     x: xData,
@@ -13,12 +13,10 @@ function MyBarChart({ values, xData }) {
   const layout = {
     width: 500,
     height: 300,
-    title: 'Bar Chart',
+    title: title,
     xaxis: {
-      title: 'X-Axis Label',
     },
     yaxis: {
-      title: 'Y-Axis Label',
     },
   };
 

@@ -82,6 +82,7 @@ exports.classifyIslandingEvent = ((req, res, next) => {
 exports.findStatistics = ((req, res, next) => {
     const spawn = require('child_process').spawn;
     let data = req.body.data;
+    console.log(data);
     data = JSON.stringify(data);
     const pythonProcess = spawn('python3', [__dirname + '/python-files/baselining.py', data]);
     let responseData = "";

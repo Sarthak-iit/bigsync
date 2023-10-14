@@ -6,7 +6,6 @@ if len(sys.argv) != 2:
     sys.exit(1)
 try:
     data = json.loads(sys.argv[1])
-    
     ss = SignalStats()
     res = ss.findStatistics(data)
     res = json.dumps(res)

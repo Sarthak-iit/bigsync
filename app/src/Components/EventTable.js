@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import PlotlyPlot from './PlotV2'
+import { styles } from '../styles';
 const makeRows = (rows, object) => {
   const events = Object.keys(object);
   events.map((e, i) => {
@@ -63,7 +64,7 @@ export default function EventDataGrid(props) {
       alignItems="center"
       justifyContent={'space-around'}     // Center horizontally
     >
-      <Grid container flexDirection="column" xs={3}>
+      <Grid container flexDirection="column" xs={3} >
         <DataGrid
           rows={rows}
           columns={columns}
