@@ -30,9 +30,9 @@ const Navabar = (props) => {
   console.log(currentPath);
   // const [selectedFile, setSelectedFile] = useState();
   const [isLoading, setisLoading] = useState(false);
-  const [subLnData, setSubLnData] = useState({});
-  const [data, setData] = useState([]);
-  const [time, setTime] = useState([]);
+  const [, setSubLnData] = useState({});
+  const [, setData] = useState([]);
+  const [, setTime] = useState([]);
   const handleImportNewFileButton = async (selectedFile) => {
     if (selectedFile) {
       

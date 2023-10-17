@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import { styles } from '../styles';
 
 function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
@@ -34,7 +32,7 @@ function ThresholdForm({ values, setValues, setReadyToCheckEvents }) {
       islandingEvent: !isFloatOrInt(values.islandingEvent),
     };
     const hasErrors = Object.values(newErrors).some((error) => error);
-    if (!hasErrors) {
+    if (!hasErrors) { 
         setErrors(newErrors);
         setReadyToCheckEvents(true);
     } else {

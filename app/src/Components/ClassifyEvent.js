@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import EventTable from './EventTable'
 import { useLocation,useNavigate } from 'react-router-dom';

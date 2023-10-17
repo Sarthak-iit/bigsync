@@ -23,13 +23,13 @@ export const styles = {
     overflowY: 'auto',
     flexGrow: 1,
     padding: '10px',
-    border: '1px solid #0073ba',
+    border: '3px solid #0073ba',
   },
   flexItemB: {
     flex: 1,
     height: '93vh',
     padding: '10px',
-    border: '1px solid #0073ba',
+    border: '3px solid #0073ba',
   },
   label: {
     fontWeight: 'bold',

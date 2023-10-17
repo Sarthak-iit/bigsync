@@ -14,7 +14,7 @@ export default function DiscreteSlider(prop) {
     let label = prop.prop[3]
     let defaultValue = prop.prop[4]
     const valuetext = (value) => {
-        return `${Number((value / 10).toFixed(3))} sec`;
+        return `${Number((value / 10).toFixed(3))}`;
     }
     const handleChange = (event, newValue) => { setwindowSize(Number(newValue / 10)); }
     return (
@@ -33,7 +33,7 @@ export default function DiscreteSlider(prop) {
                     max={max}
                 />
             </Box>
-            <Typography variant="body1">{windowSize} sec</Typography>
+            <Typography variant="body1">{windowSize}</Typography>
 
 
         </Stack>

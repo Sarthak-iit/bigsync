@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import PlotlyPlot from './PlotV2'
-import { styles } from '../styles';
 const makeRows = (rows, object) => {
   const events = Object.keys(object);
   events.map((e, i) => {
@@ -74,7 +73,7 @@ export default function EventDataGrid(props) {
           onRowSelectionModelChange={handleSelectionChange}
           disableMultipleRowSelection={true} // Restrict multiple selection
         />
-        {(selectedRowId || selectedRowId == 0) && <Button
+        {(selectedRowId || selectedRowId === 0) && <Button
           onClick={handleAction}
           variant="contained"
           style={{ margin: 10 }}

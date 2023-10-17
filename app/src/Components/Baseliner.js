@@ -69,7 +69,7 @@ function Baseliner() {
         if (serverData.error) {
             if (serverData.error) {
                 console.log(serverData.error)
-                setErr_message('Sorry! Server error');
+                setErr_message('Server error while trying to check stats');
             }
             return
         }
