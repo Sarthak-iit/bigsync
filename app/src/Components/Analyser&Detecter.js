@@ -13,8 +13,9 @@ import classifyEventData from '../utils/classifyEventV2';
 import ThresholdForm from './ThresholdForm';
 import AlertDialog from './ErrorAlert'
 import { styles } from '../styles';
+import GLOBAL from '../GLOBAL';
 
-const serverAddress = 'http://localhost:5000/';
+const serverAddress = GLOBAL.serverAddress;
 function Analyser() {
 
     // ------------ Getting csv Data -----------------//

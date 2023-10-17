@@ -10,7 +10,8 @@ import dataToServer from '../utils/dataToServer'
 import AlertDialog from './ErrorAlert'
 import MyBarChart from './Barchart';
 import { styles } from '../styles';
-const serverAddress = 'http://localhost:5000/';
+import GLOBAL from '../GLOBAL';
+const serverAddress = GLOBAL.serverAddress;
 function Baseliner() {
     // ------------ Getting csv Data -----------------//
     const location = useLocation();
@@ -66,14 +67,10 @@ function Baseliner() {
         const serverData = await dataToServer([1, data[`${selectedSub}` + ':' + `${selectedLine}`]['F']], serverAddress + 'v2/find-statistics', 1, 1);
         console.log('serverData', serverData);
         if (serverData.error) {
-            if (serverData.error.message) {
+            if (serverData.error) {
                 console.log(serverData.error)
-                setErr_message(serverData.error.message);
+                setErr_message('Sorry! Server error');
             }
-            else {
-                setErr_message(serverData.error.message);
-            }
-
             return
         }
         // server return faultdata if fault is there and fault:none of fault is not there

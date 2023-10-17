@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import formatData from '../utils/formatData';
 import parseCSV from '../utils/parseCSV';
 import LinearBuffer from './Loading';
+import { styles } from '../styles';
 const Navabar = (props) => {
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
@@ -33,9 +34,10 @@ const Navabar = (props) => {
   const [data, setData] = useState([]);
   const [time, setTime] = useState([]);
   const handleImportNewFileButton = async (selectedFile) => {
-    if (true) {
-      setisLoading(true);
+    if (selectedFile) {
+      
       try {
+        setisLoading(true);
         var data = await parseCSV(selectedFile);
         var time;
         [time, data] = await formatData(data);
@@ -67,7 +69,6 @@ const Navabar = (props) => {
 
       } catch (error) {
         
-
         console.error('Error:', error);
       }
     }
@@ -127,8 +128,8 @@ const Navabar = (props) => {
 
   return (
     <Box sx={{ flexGrow: 1 }} >
-      <AppBar position="static" variant="dense">
-        <Toolbar >
+      <AppBar position="static" variant="dense" >
+        <Toolbar style={styles.navbar}>
           <Drawer
             anchor="left"
             open={state.left}
@@ -149,16 +150,16 @@ const Navabar = (props) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             BigSync
           </Typography>
-          <input type="file" id="fileInputNav" accept=".csv" onChange={handleImportFile} style={{display:'none'}}/>
-          <label htmlFor="fileInputNav">
+          <input type="file" style={styles.fileInputStyle} id="fileInputNav" accept=".csv" onChange={handleImportFile}/>
+          {/* <label htmlFor="fileInputNav">
             <Button
               color="inherit"
               component="span"
               sx={{ margin: 2 }}
             >
-              Import New File
+              Import File
             </Button>
-          </label>
+          </label> */}
           <Button
             sx={{ ml: 1 }}
             onClick={() =>

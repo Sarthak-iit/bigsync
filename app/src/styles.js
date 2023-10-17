@@ -1,6 +1,6 @@
 export const styles = {
   container: {
-    maxHeight: '90vh',
+    maxHeight: '93vh',
     overflowY: 'auto',
   },
   
@@ -19,7 +19,7 @@ export const styles = {
     justifyContent: 'space-between',
   },
   flexItem: {
-    height: '90vh',
+    height: '93vh',
     overflowY: 'auto',
     flexGrow: 1,
     padding: '10px',
@@ -27,7 +27,7 @@ export const styles = {
   },
   flexItemB: {
     flex: 1,
-    height: '90vh',
+    height: '93vh',
     padding: '10px',
     border: '1px solid #0073ba',
   },
@@ -40,5 +40,19 @@ export const styles = {
     opacity:0,
     
     transition: 'opacity 0.3s',
+  },
+  fileInputStyle : {
+    color: '#fff',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    margin: '10px',
+    textAlign: 'center',
+  },
+  navbar:{
+    minHeight:'50px',
+    height:'7vh'
   }
 };
