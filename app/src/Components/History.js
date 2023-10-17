@@ -19,7 +19,6 @@ let rows = [];
 for (let i = 0; i < temp.length; i += 3) {
     rows.push(temp.slice(i, i + 3));
   }
-console.log(rows)
 
 export default function History() {
     return (

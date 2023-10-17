@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-concat */
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Grid, Typography, Button, Divider, Alert } from '@mui/material';
+import { Checkbox, Grid, Typography, Button, Alert } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
@@ -21,7 +21,6 @@ function Analyser() {
     const navigate = useNavigate();
     const location = useLocation();
     const [subLnData, data, time] = location.state || [null, null, null];
-
     // -------------- Making state variables ------------//
     const [selectedSub, setSelectedSub] = useState(null);
     const [selectedLine, setSelectedLine] = useState(null);
@@ -45,10 +44,23 @@ function Analyser() {
     let p1 = ['F', 'VM', 'VA', 'IM', 'IA']
     let p2 = ['Frequency', 'Voltage Magnitude', 'Voltage Angle', 'Current Magnitude', 'Current Angle']
 
+    /* Concept of modes:
+        null => default
+        0 => after clicking on detect fault
+        1 => after clicking on add 
+        2 => after getting data from server for detect fault or getting fault data
+
+        if mode is  0 or 1 => buttontext is detect fault
+        if any of the sub, line or prop id changed mode is changed to 0
+
+
+    */
+
+
     // --------------- handeling Button functions ------------------ // 
 
     const handleDetectFaultButton = () => {
-        console.log('Mode set to detect-event')
+        // console.log('Mode set to detect-event')
         setButtonText('Send To Server');
         setMode(0);
 
@@ -62,8 +74,8 @@ function Analyser() {
                 }
             })
             temp.push([`${selectedSub}` + ':' + `${selectedLine}`]);
-            console.log('temp', temp);
             setPlotData(temp);
+            setfaultData(null);
             setislandingEventData(temp);
             setMode(1);
         }
@@ -73,12 +85,13 @@ function Analyser() {
     }
     const resetPlotData = () => {
         setPlotData([[], []]);
-        setislandingEventData([[], []])
+        setislandingEventData([[], []]);
+        setfaultData([[], []]);
+        setMode(null);
     }
     const sendToServer = async (e) => {
-        console.log(selectedSub, selectedLine)
         const serverData = await dataToServer([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + 'v2/detect-event', windowSize, sd_th);
-        console.log('serverData', serverData);
+        // console.log('serverData', serverData);
         if (serverData.error) {
             if (serverData.error.message) {
                 setErr_message("Server error while detecting");
@@ -105,7 +118,7 @@ function Analyser() {
     const handleClassifyEvent = async (e) => {
 
         const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + 'v2/classify-event');
-        console.log('classifiedData', classifiedData)
+        // console.log('classifiedData', classifiedData)
         if (classifiedData.error) {
             setErr_message(classifiedData.error.message);
         }
@@ -123,13 +136,13 @@ function Analyser() {
         }
     }
     const handleClassifyIslandingEvent = async (e) => {
-        console.log('islandingEventData')
+        // console.log('islandingEventData')
         let array = []
         islandingEventData.forEach((d) => {
             array.push(data[d]['F'])
         })
         const serverData = await dataToServer([time, array, thresholdValues], serverAddress + 'v2/detect-islanding-event', windowSize, sd_th);
-        console.log('islanding data', serverData)
+        // console.log('islanding data', serverData)
         if (serverData && !serverData.error) {
 
             navigate('/classify-event', {
@@ -148,14 +161,18 @@ function Analyser() {
         if(mode === 0){
             setButtonText('Detect event')
         }
+        if(mode === 1){
+            setButtonText('Detect event')
+        }
 
     },[mode])
+
 
     useEffect(() => {
         resetPlotData();
     }, [property])
     useEffect(() => {
-        console.log('mode->0')
+        // console.log('mode->0')
         setMode(0);
         setfaultData(null);
         setButtonText('Detect Event');
@@ -219,13 +236,13 @@ function Analyser() {
                 <Grid style={styles.flexItem}>
                     <Grid>
 
-                        {(!faultData || (mode === 0)) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
-                        {(faultData && mode && mode !== 0) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
+                        {(!faultData) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
+                        {(faultData) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
                     </Grid>
                     <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
                         {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}
                         {mode === 1 && selectedSub && selectedLine && property === 'F' && (
-                            <Button variant="contained" sx={{ margin: 2 }} onClick={sendToServer}>{buttonText}</Button>
+                            <Button variant="contained"  sx={{ margin: 2 }} onClick={sendToServer}>{buttonText}</Button>
                         )}
                         {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && (
                             <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyEvent}>{buttonText}</Button>

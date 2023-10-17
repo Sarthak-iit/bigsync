@@ -3,9 +3,14 @@ import Plot from 'react-plotly.js';
 const getInnermostValue = (arr) => arr.reduce((acc, val) => (Array.isArray(val) ? getInnermostValue(val) : val), arr);
 
 const AnalysePlot = (props) => {
-  const [xData, yDatas, data, property] = props.props;
-  console.log('yDatas',yDatas)
-  console.log('xData',xData);
+  let [xData, yDatas, data, property] = props.props;
+  if (!xData || !yDatas || yDatas.length === 0) {
+    xData=[];
+    yDatas=[]
+
+  }
+  // console.log('yDatas',yDatas)
+  // console.log('xData',xData);
   const toPlot = yDatas.map((yData, i) => ({
     x:xData,
     y: data[yData]?data[yData][property].map(dataPoint => dataPoint):[],

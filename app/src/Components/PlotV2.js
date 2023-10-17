@@ -3,7 +3,6 @@ import Plot from 'react-plotly.js';
 
 const PlotlyPlot = (props) => {
   let [xData, yData, xLabel, yLabel, title] = props.props;
-  console.log('title', title);
 
   if (!xData || !yData || yData.length === 0) {
     xData=[];

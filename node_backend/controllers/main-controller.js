@@ -6,6 +6,7 @@ exports.detectEvent = ((req, res, next) => {
     const time = req.body.time;
     const data = req.body.data;
     const windowSize = req.body.windowSize;
+    console.log(data[22]);
     const sd_th = req.body.sd_th;
     const pythonProcess = spawn('python3', [__dirname + '/python-files/event-detection.py', data, time, Number(windowSize), Number(sd_th)]);
     pythonProcess.stdout.on('data', (data) => {
