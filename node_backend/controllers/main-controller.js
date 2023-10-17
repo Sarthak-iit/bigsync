@@ -3,10 +3,9 @@ const decoder = new TextDecoder('utf-8');
 
 exports.detectEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = req.body.time;
-    const data = req.body.data;
+    const time = JSON.stringify(req.body.time);
+    const data = JSON.stringify(req.body.data);
     const windowSize = req.body.windowSize;
-    console.log(data[22]);
     const sd_th = req.body.sd_th;
     const pythonProcess = spawn('python3', [__dirname + '/python-files/event-detection.py', data, time, Number(windowSize), Number(sd_th)]);
     pythonProcess.stdout.on('data', (data) => {
@@ -29,8 +28,8 @@ exports.detectEvent = ((req, res, next) => {
 
 exports.classifyEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = req.body.time;
-    const data = req.body.data;
+    const time = JSON.stringify(req.body.time);
+    const data = JSON.stringify(req.body.data);
     const threshold_values = JSON.stringify(req.body.thresholdValues);
     const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification.py', data, time, threshold_values]);
     let responseData = "";
@@ -55,7 +54,7 @@ exports.classifyEvent = ((req, res, next) => {
 })
 exports.classifyIslandingEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = req.body.time;
+    const time = JSON.stringify(req.body.time);
     const data = JSON.stringify(req.body.data);
 
     const threshold_values = JSON.stringify(req.body.thresholdValues);
@@ -82,9 +81,7 @@ exports.classifyIslandingEvent = ((req, res, next) => {
 })
 exports.findStatistics = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    let data = req.body.data;
-    console.log(data);
-    data = JSON.stringify(data);
+    let data = JSON.stringify(req.body.data);
     const pythonProcess = spawn('python3', [__dirname + '/python-files/baselining.py', data]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {

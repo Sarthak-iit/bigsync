@@ -11,8 +11,8 @@ if len(sys.argv) != 4:
     print("Usage: python event-classification.py <data> <windowSize> <sd_th>")
     sys.exit(1)
 try:
-    data = listOfCharsToNumber((sys.argv[1]).split(','))
-    time = listOfCharsToNumber((sys.argv[2]).split(','))
+    data = json.loads(sys.argv[1])
+    time = json.loads(sys.argv[2])
     threshold_values = json.loads(sys.argv[3])
     if time and data:
         eventClassify =  EventClassification(data,time,threshold_values)

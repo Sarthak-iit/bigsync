@@ -11,8 +11,8 @@ if len(sys.argv) != 5:
     print("Usage: python event-detection.py <data> <windowSize> <sd_th>")
     sys.exit(1)
 try:
-    data = listOfCharsToNumber((sys.argv[1]).split(','))
-    time = listOfCharsToNumber((sys.argv[2]).split(','))
+    data = json.loads(sys.argv[1])
+    time = json.loads(sys.argv[2])
     window_size = float(sys.argv[3])
     sd_th = float(sys.argv[4])
     faultDetection = FaultDetection()
