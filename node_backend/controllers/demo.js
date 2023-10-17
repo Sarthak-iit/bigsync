@@ -1,24 +1,13 @@
 const express = require('express');
 const decoder = new TextDecoder('utf-8');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
 
 exports.detectEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = (req.body.time);
-    const data = (req.body.data);
+    const time = JSON.stringify(req.body.time);
+    const data = JSON.stringify(req.body.data);
     const windowSize = req.body.windowSize;
     const sd_th = req.body.sd_th;
-
-
-    // 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
-    const dataFilePath = path.join(tempDir, 'data.json');
-    fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
-    // 
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-detection.py', dataFilePath,Number(windowSize), Number(sd_th)]);
+    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-detection.py', data, time, Number(windowSize), Number(sd_th)]);
     pythonProcess.stdout.on('data', (data) => {
         const result = JSON.parse(decoder.decode(data));
         res.status(200).json(result);
@@ -39,14 +28,10 @@ exports.detectEvent = ((req, res, next) => {
 
 exports.classifyEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = req.body.time;
-    const data = req.body.data;
+    const time = JSON.stringify(req.body.time);
+    const data = JSON.stringify(req.body.data);
     const threshold_values = JSON.stringify(req.body.thresholdValues);
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
-    const dataFilePath = path.join(tempDir, 'data.json');
-    fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification.py', dataFilePath, threshold_values]);
+    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification.py', data, time, threshold_values]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);
@@ -69,15 +54,11 @@ exports.classifyEvent = ((req, res, next) => {
 })
 exports.classifyIslandingEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
-    const time = req.body.time;
-    const data = req.body.data;
-    const threshold_values = JSON.stringify(req.body.thresholdValues);
+    const time = JSON.stringify(req.body.time);
+    const data = JSON.stringify(req.body.data);
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
-    const dataFilePath = path.join(tempDir, 'data.json');
-    fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification-islanding.py', dataFilePath, threshold_values]);
+    const threshold_values = JSON.stringify(req.body.thresholdValues);
+    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification-islanding.py', data, time, threshold_values]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);
@@ -101,12 +82,7 @@ exports.classifyIslandingEvent = ((req, res, next) => {
 exports.findStatistics = ((req, res, next) => {
     const spawn = require('child_process').spawn;
     let data = JSON.stringify(req.body.data);
-    // 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    const dataFilePath = path.join(tempDir, 'data.json');
-    fs.writeFileSync(dataFilePath,data);
-    // 
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/baselining.py', dataFilePath]);
+    const pythonProcess = spawn('python3', [__dirname + '/python-files/baselining.py', data]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);

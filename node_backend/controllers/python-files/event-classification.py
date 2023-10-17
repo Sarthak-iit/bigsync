@@ -2,18 +2,23 @@ import sys
 import json
 
 from Algorithms.FC_Algo import EventClassification
-def listOfCharsToNumber(arr):
-    for i in range(len(arr)):
-        arr[i] = float(arr[i])
-    return arr
+def read_data_from_file(data_file_path):
+    with open(data_file_path, 'r') as file:
+        data = json.load(file)
+    return data
 
-if len(sys.argv) != 4:
+if len(sys.argv) != 3:
     print("Usage: python event-classification.py <data> <windowSize> <sd_th>")
     sys.exit(1)
 try:
-    data = json.loads(sys.argv[1])
-    time = json.loads(sys.argv[2])
-    threshold_values = json.loads(sys.argv[3])
+    data_file_path = sys.argv[1]
+    
+    data_file = read_data_from_file(data_file_path)
+   
+    data = data_file[0]
+    time = data_file[1]
+    
+    threshold_values = json.loads(sys.argv[2])
     if time and data:
         eventClassify =  EventClassification(data,time,threshold_values)
         print(json.dumps(eventClassify.classifyEvents()))

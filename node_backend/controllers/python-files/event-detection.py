@@ -1,20 +1,22 @@
 import sys 
 import json
-def listOfCharsToNumber(arr):
-    for i in range(len(arr)):
-        arr[i] = float(arr[i])
-    return arr
+def read_data_from_file(data_file_path):
+    with open(data_file_path, 'r') as file:
+        data = json.load(file)
+    return data
 from Algorithms.FD_Algo import FaultDetection
 
 # Check if the script is called with the expected number of arguments
-if len(sys.argv) != 5:
+if len(sys.argv) != 4:
     print("Usage: python event-detection.py <data> <windowSize> <sd_th>")
     sys.exit(1)
 try:
-    data = json.loads(sys.argv[1])
-    time = json.loads(sys.argv[2])
-    window_size = float(sys.argv[3])
-    sd_th = float(sys.argv[4])
+    data_file_path = sys.argv[1]
+    data_file = read_data_from_file(data_file_path)
+    data = data_file[0]
+    time = data_file[1]
+    window_size = float(sys.argv[2])
+    sd_th = float(sys.argv[3])
     faultDetection = FaultDetection()
     res = faultDetection.getFault(data,time,window_size, sd_th)
     if(res):
