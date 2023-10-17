@@ -46,7 +46,6 @@ export const styles = {
     padding: '10px 20px',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer',
     fontSize: '16px',
     margin: '10px',
     textAlign: 'center',
