@@ -3,6 +3,9 @@ const decoder = new TextDecoder('utf-8');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config({ path: './../node_backend/config.env' });
+const script = process.env.SCRIPT;
 
 exports.detectEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
@@ -18,7 +21,7 @@ exports.detectEvent = ((req, res, next) => {
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
     // 
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-detection.py', dataFilePath,Number(windowSize), Number(sd_th)]);
+    const pythonProcess = spawn(script, [__dirname + '/python-files/event-detection.py', dataFilePath,Number(windowSize), Number(sd_th)]);
     pythonProcess.stdout.on('data', (data) => {
         const result = JSON.parse(decoder.decode(data));
         res.status(200).json(result);
@@ -37,6 +40,7 @@ exports.detectEvent = ((req, res, next) => {
     });
 });
 
+
 exports.classifyEvent = ((req, res, next) => {
     const spawn = require('child_process').spawn;
     const time = req.body.time;
@@ -46,7 +50,7 @@ exports.classifyEvent = ((req, res, next) => {
     console.log(tempDir)
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification.py', dataFilePath, threshold_values]);
+    const pythonProcess = spawn(script, [__dirname + '/python-files/event-classification.py', dataFilePath, threshold_values]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);
@@ -77,7 +81,7 @@ exports.classifyIslandingEvent = ((req, res, next) => {
     console.log(tempDir)
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/event-classification-islanding.py', dataFilePath, threshold_values]);
+    const pythonProcess = spawn(script, [__dirname + '/python-files/event-classification-islanding.py', dataFilePath, threshold_values]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);
@@ -106,7 +110,7 @@ exports.findStatistics = ((req, res, next) => {
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath,data);
     // 
-    const pythonProcess = spawn('python3', [__dirname + '/python-files/baselining.py', dataFilePath]);
+    const pythonProcess = spawn(script, [__dirname + '/python-files/baselining.py', dataFilePath]);
     let responseData = "";
     pythonProcess.stdout.on('data', (data) => {
         data = decoder.decode(data);

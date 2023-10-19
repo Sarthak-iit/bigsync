@@ -3,9 +3,15 @@ import Plot from 'react-plotly.js';
 
 function MyBarChart({ values, xData,title }) {
   // Create a trace for the bar chart
+  let v = []
+  values.forEach((i)=>{
+    v.push(Math.abs(i))
+  })
+  console.log(v)
+  console.log(values)
   const trace = {
     x: xData,
-    y: values,
+    y: v,
     type: 'bar',
   };
 
