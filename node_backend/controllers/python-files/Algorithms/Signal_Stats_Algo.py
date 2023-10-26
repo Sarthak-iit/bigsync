@@ -39,11 +39,11 @@ class SignalStats:
                     "99.5% Limit": percentile_995_freq,
                     "99.9% Limit": percentile_999_freq},
                 'rocof':
-                    {"Minimum": min_value_rocof,
-                    "Maximum": max_value_rocof,
-                    "Mean": mean_rocof,
-                    "99.5% Limit": percentile_995_rocof,
-                    "99.9% Limit": percentile_999_rocof}
+                    {"Minimum": abs(min_value_rocof),
+                    "Maximum": abs(max_value_rocof),
+                    "Mean": abs(mean_rocof),
+                    "99.5% Limit": abs(percentile_995_rocof),
+                    "99.9% Limit": abs(percentile_999_rocof)}
             }
         except Exception as e:
             print(f"{'error': 'An unexpected error occurred'}")

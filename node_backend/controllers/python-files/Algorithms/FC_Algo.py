@@ -63,8 +63,10 @@ class EventClassification(FaultDetection):
             k = duration/n_samples
             time_data = np.linspace(0,duration,n_samples)    
             i = 0
+            arr = []
             th_step = float(self.thresholdValues['stepChange'])
             while(i < len(self._freq_data)):
+                
                 curr_data = np.array(self._freq_data[i:i+win_size])
                 curr_time_data = np.array(self._time_data[i:i+win_size])
                 f_max_index = np.argmax(curr_data)
@@ -73,17 +75,15 @@ class EventClassification(FaultDetection):
                 f_min_index = np.argmin(curr_data)
                 f_min = curr_data[f_min_index]
                 t_min = curr_time_data[f_min_index]
-                # 
-                if((t_max - t_min) > 10 and (f_max - f_min) > th_step):
-                    gradient = np.gradient(curr_data)
-                    slope_avg = np.mean(gradient)
-                    if slope_avg > 0:
+                if(abs(t_max - t_min) > 10 and abs(f_max - f_min) > th_step):
+                    slope_avg = (f_min-f_max)/(t_min-t_max)
+                    # print(slope_avg)
+                    if slope_avg < 0:
                         self.isGenLossEvent = True
                         return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'gen']
                     else:
                         self.isLoadLossEvent = True
                         return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'load']
-                    
                 i += win_size
         except Exception as e:
             # Handle the exception, log it, and return a generic error response

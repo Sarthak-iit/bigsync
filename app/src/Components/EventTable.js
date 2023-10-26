@@ -32,6 +32,16 @@ const columns = [
 export default function EventDataGrid(props) {
   const [selectedRowId, setSelectedRowId] = React.useState(null);
   const [eventData, setEventData] = React.useState([[], []]);
+  const [label, setlabel] = React.useState(['F[Hz]','time[s]']);
+  React.useEffect(()=>{
+    if(selectedRowId === 3){
+      setlabel(['P[dB]','Freq[Hz]'])
+    }
+    else{
+      setlabel(['F[Hz]','time[s]'])
+    }
+    
+  },[selectedRowId])
 
   const result = props.props["result"];
   const data = props.props["data"];
@@ -84,7 +94,7 @@ export default function EventDataGrid(props) {
 
 
 
-      <PlotlyPlot props={[eventData[1], eventData[0],'' ,rows[selectedRowId],'Detected event' ]} />
+      <PlotlyPlot props={[eventData[1], eventData[0],label[1] ,label[0],'Detected event' ]} />
 
     </Grid>
 

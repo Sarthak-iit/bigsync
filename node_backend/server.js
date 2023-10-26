@@ -13,7 +13,6 @@ app.use('/',(req,res,next)=>{
 app.all('*', (req, res, next) => {
     next(new Error(`Can't find  ${req.originalUrl} on this server!`, 404));
   });
-
 const port = 8080;
 
 

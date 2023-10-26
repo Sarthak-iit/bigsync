@@ -182,7 +182,6 @@ function Analyser() {
     if (!data) {
         return(<Alert severity="error">No Data found to analyze, Please import a file</Alert>);
     }
-
     // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
@@ -238,7 +237,7 @@ function Analyser() {
                     <Grid>
 
                         {(!faultData) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
-                        {(faultData) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Fault Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
+                        {(faultData) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Event Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
                     </Grid>
                     <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
                         {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}
@@ -248,7 +247,7 @@ function Analyser() {
                         {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && (
                             <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyEvent}>{buttonText}</Button>
                         )}
-                        {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData[0].length > 0 && (
+                        {reaadyToCheckEvents && mode === 2 && selectedSub && selectedLine && property === 'F' && islandingEventData[0] && islandingEventData.length > 1 && (
                             <Button variant="contained" sx={{ margin: 2 }} onClick={handleClassifyIslandingEvent}>{'Detect islanding event '}</Button>
                         )}
 

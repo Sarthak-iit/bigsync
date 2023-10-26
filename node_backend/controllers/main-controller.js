@@ -17,7 +17,6 @@ exports.detectEvent = ((req, res, next) => {
 
     // 
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
     // 
@@ -47,7 +46,6 @@ exports.classifyEvent = ((req, res, next) => {
     const data = req.body.data;
     const threshold_values = JSON.stringify(req.body.thresholdValues);
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
     const pythonProcess = spawn(script, [__dirname + '/python-files/event-classification.py', dataFilePath, threshold_values]);
@@ -78,7 +76,7 @@ exports.classifyIslandingEvent = ((req, res, next) => {
     const threshold_values = JSON.stringify(req.body.thresholdValues);
 
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'myapp-'));
-    console.log(tempDir)
+    // console.log(tempDir)
     const dataFilePath = path.join(tempDir, 'data.json');
     fs.writeFileSync(dataFilePath, JSON.stringify([data,time]));
     const pythonProcess = spawn(script, [__dirname + '/python-files/event-classification-islanding.py', dataFilePath, threshold_values]);
