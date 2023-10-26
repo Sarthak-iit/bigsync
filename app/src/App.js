@@ -9,13 +9,15 @@ import Home from './Components/Home'
 import Classify from './Components/ClassifyEvent'
 import Analyser from './Components/Analyser&Detecter';
 import Baseliner from './Components/Baseliner';
+import { indigo, purple } from '@mui/material/colors';
 
 
 function App() {
   
   const theme = useTheme();
   const [colorMode, setColorMode] = React.useState(theme.palette.mode);
-  const newTheme = createTheme({ palette: { mode: colorMode } });
+  const newTheme = createTheme({ palette: { mode: colorMode,primary: indigo,
+    secondary: purple, } });
   newTheme.typography.h2 = {
     fontSize: '5rem',
     fontFamily: 'Kohinoor W00 Bold',

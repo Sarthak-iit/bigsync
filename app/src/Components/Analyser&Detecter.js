@@ -17,7 +17,6 @@ import GLOBAL from '../GLOBAL';
 
 const serverAddress = GLOBAL.serverAddress;
 function Analyser() {
-
     // ------------ Getting csv Data -----------------//
     const navigate = useNavigate();
     const location = useLocation();
@@ -119,7 +118,7 @@ function Analyser() {
     const handleClassifyEvent = async (e) => {
 
         const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + 'v2/classify-event');
-        // console.log('classifiedData', classifiedData)
+        console.log('classifiedData', classifiedData)
         if (classifiedData.error) {
             setErr_message(classifiedData.error.message);
         }
