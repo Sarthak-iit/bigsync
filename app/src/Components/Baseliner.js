@@ -162,9 +162,9 @@ function Baseliner() {
 
 
                 </Grid>
-                <Grid style={styles.flexItemB} container direction={'column'}>
-                    <MyBarChart style={styles.flexItemB}xData={Object.keys(statData['freq'])} values={Object.values(statData['freq'])} title={'Frequency data stats'} />
-                    <MyBarChart style={styles.flexItemB} xData={Object.keys(statData['rocof'])} values={Object.values(statData['rocof'])} title={'ROCOF data stats'}/>
+                <Grid style={{...styles.flexItemB,...{flexDirection:'row'}}} container direction={'column'}>
+                    <MyBarChart xData={Object.keys(statData['freq'])} values={Object.values(statData['freq'])} title={'Frequency data stats'} />
+                    <MyBarChart  xData={Object.keys(statData['rocof'])} values={Object.values(statData['rocof'])} title={'ROCOF data stats'}/>
                 </Grid>
             </div>
         </div>
