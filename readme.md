@@ -1,66 +1,71 @@
+
 # BigSync
+This software is my undergoing final year B.Tech. project.
+It uses the algorithm developed in paper "**A Novel Event Detection and Classification Scheme Using Wide-Area Frequency Measurements**" to detect and classify events.
 
-  
+## Tech-stack
 
-This project consists of a React frontend app and a Node.js backend server with python child processes.  Follow the instructions below to set up and build the project.
+ 1. Frontend : **React.js**
+ 2. Backend : 
+ -- **Python** for implementing algorithms discussed in the paper 
+-- Two different servers :  one is a **fastAPI** server and is using **node.js** and child processes module for making python child process.
+-- **fastAPI** server is preferred.
 
-  
-
-## Prerequisites
-
-  
+## Prerequisites for installing
 
 Before you begin, make sure you have the following software installed on your system:
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/) (Comes with Node.js)
+- [fastAPI](https://fastapi.tiangolo.com/)
 
-  
+> If fastAPI not installed install it by `pip install fastapi`
 
--  [Node.js](https://nodejs.org/) (LTS version recommended)
+## Backend (FastAPI) Setup
 
--  [npm](https://www.npmjs.com/) (Comes with Node.js)
+### Navigate to the fastAPI backend directory
 
-  
+    cd  python-backend
+### Install backend dependencies
+`pip install fastapi`
+`pip  install  numpy`
+`pip install uvicorn` 
+
+### Start the backend server
+`python server.py`
+
 
 ## Backend (Node.js) Setup
 
-  
+### Navigate to the Node.js backend directory
 
-```bash
+    cd  node_backend
+### Install backend dependencies
+`npm  install`
+`pip  install  numpy`
 
-# Navigate to the Node.js backend directory
-
-cd  node_backend
-
-  
-
-# Install backend dependencies
-
-npm  install
-
-pip  install  numpy
+### Start the backend server
+`npm  start`
 
   
 
-# Start the backend server
-
-npm  start
-
   
 
-# Navigate to the React frontend directory
+## Frontend setup
+### Navigate to react frontend directory
+`cd  app`
 
-cd  app
+### To use development server
+- #### Install frontend dependencies
+	 `npm  install`
+- #### Start the React development server
+	 `npm  start`
 
-  
+>The react app will be accessible at http://localhost:3000
+### To serve production build server
+Installing serve package
 
-# Install frontend dependencies
+    npm i -S serve
+Serving the build folder using npx
 
-npm  install
+	npx serve -s build
 
-  
-
-# Start the React development server
-
-npm  start
-
-  ```
-  The react app will be accessible at http://localhost:3000
