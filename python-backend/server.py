@@ -92,13 +92,13 @@ async def detect_islanding_event(event_settings: StatisticsSettings):
     )
     return res
 
-# @app.exception_handler(StarletteHTTPException)
-# async def http_exception_handler(request, exc):
-#     return {"error": "An unexpected error occurred"}
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    return {"error": "An unexpected error occurred"}
 
-# @app.exception_handler(RequestValidationError)
-# async def validation_exception_handler(request, exc):
-#     return {"error": "Validation error"}
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return {"error": "Validation error"}
 
 if __name__ == "__main__":
     import uvicorn
