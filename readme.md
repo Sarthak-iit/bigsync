@@ -26,12 +26,12 @@ Before you begin, make sure you have the following software installed on your sy
 
     cd  python-backend
 ### Install backend dependencies
-`pip install fastapi`
-`pip  install  numpy`
-`pip install uvicorn` 
+	pip install fastapi
+	pip  install  numpy
+	pip install uvicorn
 
 ### Start the backend server
-`python server.py`
+	python server.py`
 
 
 ## Backend (Node.js) Setup
@@ -40,11 +40,11 @@ Before you begin, make sure you have the following software installed on your sy
 
     cd  node_backend
 ### Install backend dependencies
-`npm  install`
-`pip  install  numpy`
+	npm  install
+	pip  install  numpy
 
 ### Start the backend server
-`npm  start`
+	npm  start
 
   
 
@@ -52,13 +52,13 @@ Before you begin, make sure you have the following software installed on your sy
 
 ## Frontend setup
 ### Navigate to react frontend directory
-`cd  app`
+	cd  app
 
 ### To use development server
 - #### Install frontend dependencies
-	 `npm  install`
+		 npm  install
 - #### Start the React development server
-	 `npm  start`
+		 npm  start
 
 >The react app will be accessible at http://localhost:3000
 ### To serve production build server
