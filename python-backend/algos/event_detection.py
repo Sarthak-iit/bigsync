@@ -1,6 +1,6 @@
 import sys 
 import json
-from algos.Algorithms.FD_Algo import FaultDetection
+from algos.Algorithms.Faults.FD_Algo import FaultDetection
 
 # Check if the script is called with the expected number of arguments
 def eventDetection(data,time,window_size,sd_th):

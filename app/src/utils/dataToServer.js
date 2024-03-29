@@ -1,5 +1,3 @@
-import setCookie from "./cookieManager";
-
 const dataToServer = async([time,data,thresholdValues],serverAddress,windowSize,sd_th) => {
     console.log('serverAddress',serverAddress);
     if (!time || !data) {
@@ -26,11 +24,9 @@ const dataToServer = async([time,data,thresholdValues],serverAddress,windowSize,
         console.log('response',response)
         if (response.ok) {
             const responseData = await response.json(); // Parse the response as JSON
-            setCookie([new Date(),"success",responseData["fault"]]);
             return responseData;
         } 
         else{
-          setCookie([new Date(), "fail", null]);
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 

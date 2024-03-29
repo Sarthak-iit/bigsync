@@ -13,6 +13,12 @@ const imageStyles = {
   transition: 'transform 0.5s ease', // Add a smooth transition
 };
 
+const buttonStyle = {
+  marginTop:'10px',
+  width:'20vw'
+}
+
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState();
@@ -53,46 +59,119 @@ const LandingPage = () => {
       } catch (error) {
         console.error('Error:', error);
       }
-    }};
-    const handleBaselineButton = async () => {
-      if (selectedFile) {
-        setisLoading(true);
-        try {
-          var data = await parseCSV(selectedFile);
-          var time;
-          [time, data] = await formatData(data);
-          setData(data);
-          setTime(time);
-          const sub = Object.keys(data);
-          const subLnData = {};
-          for (const item of sub) {
-            const parts = item.split(':');
-            const subKey = `Sub:${parts[1]}`;
-            const lnValue = parts[2] + ':' + parts[3];
-            if (!subLnData[subKey]) {
-              subLnData[subKey] = [];
-            }
-            subLnData[subKey].push(lnValue);
+    }
+  };
+  const handleOscillationsButton = async () => {
+    if (selectedFile) {
+      setisLoading(true);
+      try {
+        var data = await parseCSV(selectedFile);
+        var time;
+        [time, data] = await formatData(data);
+        setData(data);
+        setTime(time);
+        const sub = Object.keys(data);
+        const subLnData = {};
+        for (const item of sub) {
+          const parts = item.split(':');
+          const subKey = `Sub:${parts[1]}`;
+          const lnValue = parts[2] + ':' + parts[3];
+          if (!subLnData[subKey]) {
+            subLnData[subKey] = [];
           }
-          setSubLnData(subLnData);
-          setTimeout(() => {
-            setisLoading(false);
-  
-            navigate('/baseline', {
-              state: [subLnData, data, time],
-            });
-          }, 3000)
-  
-  
-        } catch (error) {
-          console.error('Error:', error);
+          subLnData[subKey].push(lnValue);
         }
-      }};
+        setSubLnData(subLnData);
+        setTimeout(() => {
+          setisLoading(false);
+
+          navigate('/osm', {
+            state: [subLnData, data, time],
+          });
+        }, 3000)
+
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
+  const handleBaselineButton = async () => {
+    if (selectedFile) {
+      setisLoading(true);
+      try {
+        var data = await parseCSV(selectedFile);
+        var time;
+        [time, data] = await formatData(data);
+        setData(data);
+        setTime(time);
+        const sub = Object.keys(data);
+        const subLnData = {};
+        for (const item of sub) {
+          const parts = item.split(':');
+          const subKey = `Sub:${parts[1]}`;
+          const lnValue = parts[2] + ':' + parts[3];
+          if (!subLnData[subKey]) {
+            subLnData[subKey] = [];
+          }
+          subLnData[subKey].push(lnValue);
+        }
+        setSubLnData(subLnData);
+        setTimeout(() => {
+          setisLoading(false);
+
+          navigate('/baseline', {
+            state: [subLnData, data, time],
+          });
+        }, 3000)
+
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
+
+  const handleOSLPButton = async () => {
+    if (selectedFile) {
+      setisLoading(true);
+      try {
+        var data = await parseCSV(selectedFile);
+        var time;
+        [time, data] = await formatData(data);
+        setData(data);
+        setTime(time);
+        const sub = Object.keys(data);
+        const subLnData = {};
+        for (const item of sub) {
+          const parts = item.split(':');
+          const subKey = `Sub:${parts[1]}`;
+          const lnValue = parts[2] + ':' + parts[3];
+          if (!subLnData[subKey]) {
+            subLnData[subKey] = [];
+          }
+          subLnData[subKey].push(lnValue);
+        }
+        setSubLnData(subLnData);
+        setTimeout(() => {
+          setisLoading(false);
+
+          navigate('/oslp', {
+            state: [subLnData, data, time],
+          });
+        }, 3000)
+
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
 
 
 
 
-  
+
   return (
     <Container maxWidth="sm">
       <Box mt={4} textAlign="center">
@@ -111,25 +190,46 @@ const LandingPage = () => {
       </Box>
       <Box mt={4} textAlign="center">
         <FileInput props={[selectedFile, setSelectedFile]} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems:'center' }}>
+          {selectedFile && !isLoading && <Button
+            style={buttonStyle}
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleAnalyseButton}
+          >
+            Start Analysis
+          </Button>}
+          {selectedFile && !isLoading && <Button
+            style={buttonStyle}
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleBaselineButton}
+          >
+            Start Baselining
+          </Button>}
+          {selectedFile && !isLoading && <Button
+            style={buttonStyle}
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleOscillationsButton}
+          >
+            Oscillatory stability management
+          </Button>}
 
-        {selectedFile && !isLoading && <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleAnalyseButton}
-          style={{ marginLeft: '16px' }}
-        >
-          Start Analysis
-        </Button>}
-        {selectedFile && !isLoading && <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleBaselineButton}
-          style={{ marginLeft: '16px' }}
-        >
-          Start Baselining
-        </Button>}
+          {selectedFile && !isLoading && <Button
+            style={buttonStyle}
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleOSLPButton}
+          >
+            Oscillation source analysis
+          </Button>}
+        </div>
+
         <Box margin={5}>
           {isLoading && <LinearBuffer mt={5} />}
         </Box>

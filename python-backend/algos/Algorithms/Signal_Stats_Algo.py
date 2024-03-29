@@ -1,7 +1,7 @@
 import numpy as np
 import json
 import math
-from algos.Algorithms.FD_Algo import FaultDetection
+from algos.Algorithms.Faults.FD_Algo import FaultDetection
 faultDetection = FaultDetection()
 def removeNan(arr):
     curr = 60
@@ -18,7 +18,6 @@ class SignalStats:
                 return None  # Return None for an empty dataset
             data = removeNan(data)
             rocof = self.testForRocof(data)
-            # for freq
             min_value_freq = np.min(data)
             max_value_freq = np.max(data)
             mean_freq = np.mean(data)

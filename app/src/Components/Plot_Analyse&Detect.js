@@ -4,6 +4,7 @@ const getInnermostValue = (arr) => arr.reduce((acc, val) => (Array.isArray(val) 
 
 const AnalysePlot = (props) => {
   let [xData, yDatas, data, property] = props.props;
+  console.log(yDatas)
   if (!xData || !yDatas || yDatas.length === 0) {
     xData=[];
     yDatas=[]

@@ -17,7 +17,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import HistoryIcon from '@mui/icons-material/History';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import formatData from '../utils/formatData';
@@ -27,7 +26,6 @@ import { styles } from '../styles';
 const Navabar = (props) => {
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
-  console.log(currentPath);
   // const [selectedFile, setSelectedFile] = useState();
   const [isLoading, setisLoading] = useState(false);
   const [, setSubLnData] = useState({});
@@ -56,15 +54,10 @@ const Navabar = (props) => {
         }
         setSubLnData(subLnData);
         setisLoading(false);
-        if(currentPath === '/baseline')
-        {navigate(currentPath, {
+        const newPath = currentPath || '/analyse';
+        navigate(newPath, {
           state: [subLnData, data, time],
-        });}
-        else{
-          navigate('/analyse', {
-            state: [subLnData, data, time],
-          });
-        }
+        });
 
 
       } catch (error) {
@@ -88,7 +81,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />, <AnalyticsIcon />, <QueryStatsIcon />, <HistoryIcon />]
+  const icons = [<HomeIcon />, <AnalyticsIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <AnalyticsIcon />]
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -110,7 +103,8 @@ const Navabar = (props) => {
           { text: 'Home', href: '/' },
           { text: 'Analyse and Detect', href: '/analyse' },
           { text: 'Baseline', href: '/baseline' },
-          { text: 'Detected event history', href: '/detected-event-history' },
+          { text: 'OSM', href: '/osm' },
+          { text: 'OSLP', href: '/oslp' }
           
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding>

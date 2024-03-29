@@ -1,7 +1,7 @@
 import sys 
 import json
 
-from algos.Algorithms.FC_Algo import EventClassification
+from algos.Algorithms.Faults.FC_Algo import EventClassification
 def read_data_from_file(data_file_path):
     with open(data_file_path, 'r') as file:
         data = json.load(file)

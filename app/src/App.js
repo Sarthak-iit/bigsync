@@ -4,13 +4,13 @@ import NavBar from './Components/Topnav'
 import DetectEvent from './Components/v-1/DetectEvent'
 import { createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import History from './Components/History'
 import Home from './Components/Home'
 import Classify from './Components/ClassifyEvent'
 import Analyser from './Components/Analyser&Detecter';
 import Baseliner from './Components/Baseliner';
+import ModeAnalysis from './Components/Modes';
 import { indigo, purple } from '@mui/material/colors';
-
+import OSLP from './Components/OSLP'
 
 function App() {
   
@@ -34,9 +34,10 @@ function App() {
               <Route path="/" element={<Home ></Home>}></Route>
               <Route path="/analyse" element={<Analyser></Analyser>}></Route>
               <Route path="/detect-event" element={<DetectEvent></DetectEvent>}></Route>
-              <Route path="/detected-event-history" element={<History></History>}></Route>
               <Route path="/classify-event" element={<Classify></Classify>}></Route>
               <Route path="/baseline" element={<Baseliner></Baseliner>}></Route>
+              <Route path="/osm" element={<ModeAnalysis></ModeAnalysis>}></Route>
+              <Route path="/oslp" element={<OSLP></OSLP>}></Route>
             </Routes>
           </BrowserRouter>
         </div>

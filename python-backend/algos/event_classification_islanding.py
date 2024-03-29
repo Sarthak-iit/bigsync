@@ -1,6 +1,6 @@
 import sys 
 import json
-from algos.Algorithms.FC_Algo import EventClassification
+from algos.Algorithms.Faults.FC_Algo import EventClassification
 
 def classifyIslandingEvent(datas,time,threshold_values):
     try:
