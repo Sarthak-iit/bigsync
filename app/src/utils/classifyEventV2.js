@@ -1,5 +1,3 @@
-import setCookie from "./cookieManager";
-
 const dataToServerClassify = async ([time, data, thresholdValues], serverAddress) => {
   if (!time || !data) {
     alert('Please select a file.');
@@ -20,11 +18,9 @@ const dataToServerClassify = async ([time, data, thresholdValues], serverAddress
     });
     if (response.ok) {
       const responseData = await response.json(); // Parse the response as JSON
-      setCookie([new Date(), "success", responseData["fault"]]);
       return responseData;
     }
     else {
-      setCookie([new Date(), "fail", null]);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 

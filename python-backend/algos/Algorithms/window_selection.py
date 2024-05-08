@@ -52,15 +52,11 @@ def findConstantSections(no_of_samples_by_user, IF,threshold):
     return stable_indices
 
 def findCommonIndices(sections, stable_indices):
-    print("1")
     common_indices = []
     for section in sections:
-        print("2")
         temp = np.intersect1d(stable_indices, section)#culprit for slowing the application
         if len(temp) > 0 :
-            print("3")
             for t in temp: common_indices.append(t)
-            print("4")
     return common_indices
 
 def finalChosenArea(common_indices):

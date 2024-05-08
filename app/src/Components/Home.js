@@ -85,7 +85,7 @@ const LandingPage = () => {
         setTimeout(() => {
           setisLoading(false);
 
-          navigate('/osm', {
+          navigate('/oscillation-characteristics', {
             state: [subLnData, data, time],
           });
         }, 3000)
@@ -216,7 +216,7 @@ const LandingPage = () => {
             size="large"
             onClick={handleOscillationsButton}
           >
-            Oscillatory stability management
+            Characterise oscillations
           </Button>}
 
           {selectedFile && !isLoading && <Button
@@ -226,7 +226,7 @@ const LandingPage = () => {
             size="large"
             onClick={handleOSLPButton}
           >
-            Oscillation source analysis
+            Oscillation source location
           </Button>}
         </div>
 

@@ -128,10 +128,11 @@ async def mode_analysis(event_settings: ModeAnalysisSettings):
         selected_window = windowSelection(ewt_data[i], modes_data["InstEner"][i], modes_data["InstFreq"][i])
         if len(selected_window) > 0:
             x = pronyAnalysis(selected_window)
-            if(x and abs(x[3]) < 12):
-                prony_data.append(x+[modes_data["PerEner"][i]])
-            else:
-                prony_data.append(None)
+            # print(x)
+            # if(x and abs(x[3]) < 12):
+            prony_data.append(x+[modes_data["PerEner"][i]])
+            # else:
+            #     prony_data.append(None)
             
         else:
             prony_data.append(None)

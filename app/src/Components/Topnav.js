@@ -103,7 +103,7 @@ const Navabar = (props) => {
           { text: 'Home', href: '/' },
           { text: 'Analyse and Detect', href: '/analyse' },
           { text: 'Baseline', href: '/baseline' },
-          { text: 'OSM', href: '/osm' },
+          { text: 'Oscillation characteristics', href: '/oscillation-characteristics' },
           { text: 'OSLP', href: '/oslp' }
           
         ].map((item, index) => (

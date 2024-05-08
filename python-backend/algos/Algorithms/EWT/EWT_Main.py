@@ -40,6 +40,7 @@ def detrend(arr):
 # main function to call
 def EWTmainFunction(f):
     f = removeNan(f)
+    # f = f[0:int(len(f)/4)]
     f = sm.tsa.detrend(np.array(f), 3,0)
     ewt, mfb, boundaries = EWT1D(f, params)
     tot_ener = np.sum([f[i]*f[i] for i in range(len(f))])
