@@ -49,7 +49,6 @@ def oslp_main(t, data, st, ed):
     Q_matrix = (np.vstack(Q_matrix)).T
     VM_matrix = (np.vstack(VM_matrix)).T
     VA_matrix = (np.vstack(VA_matrix)).T
-    # np.savetxt('output.txt', P_matrix[:,11])
     x12 = 30
     x14 = 0.05
     x13 = 0.5
@@ -65,18 +64,14 @@ def oslp_main(t, data, st, ed):
     td1 = [td[0] + np.floor((td[1] - td[0]) * (1 - x13) / 2), td[0] + np.floor((td[1] - td[0]) * (1 + x13) / 2)]
     # # Cut period per td1
     DE_t, P2 = SlctTWnd1(t, P1, td1)
-    # print(DE_t)
     _, Q2 = SlctTWnd1(t, Q1, td1)
     _, V2 = SlctTWnd1(t, V1, td1)
     _, VA2 = SlctTWnd1(t, VA1, td1)
     
-    np.savetxt('output.txt', P1)
-
     # fs = 250
     # t = np.arange(0, 200, 1/fs)
     numSections = len(data.keys())
     ts, sum_ = DEF_line_intA(t, P2, Q2, V2, VA2, 2, len(DE_t)-3)
-    # np.savetxt('output.txt', sum_)
     DEF_line = [] 
     Amatrix = np.vstack([ts, np.ones_like(ts)]).T
     for j in range(numSections):
@@ -88,20 +83,15 @@ def oslp_main(t, data, st, ed):
         if math.isnan(DEF_line[i]):
             DEF_line[i] = 0
     # DE ranking
-    # print(DEF_line)
     abs_values = np.abs(DEF_line)
     DEF_Ranking_Line = np.array([np.arange(1, len(DEF_line)+1),DEF_line/max(abs_values)]).T
     
     DEF_Ranking_Line = DEF_Ranking_Line[np.argsort(abs_values)[::-1]]  
-    print(DEF_Ranking_Line[:,0])
     
     ranking_f = [list(data.keys())[int(i-1)] for i in DEF_Ranking_Line[:, 0][:5]]
     def_ranked = DEF_Ranking_Line[:, 1]
     def_ranked = [f'{val:.2f}' for val in def_ranked]
    
     res = {'rank':ranking_f,'slope':[sum_[int(i-1)] for i in DEF_Ranking_Line[:, 0][:5]], 'def':def_ranked}
-    # np.savetxt('output2.txt', [list(data.keys())[int(i-1)] for i in DEF_Ranking_Line[:, 0]])
-    with open('output2.txt', 'w') as f:
-        for i in range(len(DEF_Ranking_Line[:, 0])):
-            f.write(f"{list(data.keys())[int(DEF_Ranking_Line[:,0][i])-1]}, {DEF_Ranking_Line[:,1][i]}\n")
+    
     return res

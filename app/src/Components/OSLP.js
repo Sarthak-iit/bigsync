@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
 // import AnalysePlot from './Plot_Analyse&Detect';
 import PlotlyPlotOSLP from './PlotOSLP';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import dataToServerOSLP from '../utils/dataToServerOSLP'
 import AlertDialog from './ErrorAlert'
 import { styles } from '../styles';
@@ -18,7 +18,7 @@ import LinearBuffer from './Loading';
 const serverAddress = GLOBAL.serverAddress;
 function OSLP() {
     // ------------ Getting csv Data -----------------//
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const location = useLocation();
     const [subLnData, data, time] = location.state || [null, null, null];
     // -------------- Making state variables ------------//
@@ -27,7 +27,7 @@ function OSLP() {
     const [property, setProperty] = React.useState('F');
     const [plotData, setPlotData] = useState([[], []]);
     const [stage, setStage] = React.useState(null);
-    const [buttonText, setButtonText] = useState("Locate the source")
+    const buttonText = "Locate the source"
     const [err_message, setErr_message] = React.useState(null);
     const [selectedPoints, setSelectedPoints] = useState([]);
     const [rankData, setRankData] = React.useState([]);
@@ -88,10 +88,8 @@ function OSLP() {
     const sendToServer = async (e) => {
         setStage(1);
         setLoading(true);
-        // console.log(data);
         let serverData = await dataToServerOSLP([time, data, selectedPoints], serverAddress + 'v2/oslp');
         setSelectedPoints([]);
-        console.log('serverData', serverData);
         if (serverData.error) {
             setLoading(false);
             if (serverData.error.message) {
@@ -105,15 +103,11 @@ function OSLP() {
         }
         // server return faultdata if fault is there and fault:none of fault is not there
         else if (serverData && !serverData.error) {
-            setLoading(false);
-            // serverData = JSON.parse(serverData);
-            let st = Math.floor((selectedPoints[0].x - time[0]) / (time[1] - time[0]))
-            let ed = Math.floor((selectedPoints[1].x - time[0]) / (time[1] - time[0]))
+            setLoading(false);            
             setRankData(serverData['rank']);
             setPlotData(serverData['slope'][currSlope])
             setSlopeData(serverData['slope']);
             setDefData(serverData['def'])
-            // setStEd(time.slice(stEd[0], stEd[1]));
         }
         else {
             setLoading(false);
@@ -133,7 +127,6 @@ function OSLP() {
         resetPlotData();
     }, [property])
     useEffect(() => {
-        // console.log('stage->0')
         setStage(null);
         // if (time) { setStEd([0, time.length]) }
         setSlopeData([]);
@@ -146,7 +139,6 @@ function OSLP() {
     if (!data) {
         return (<Alert severity="error">No Data found to analyze, Please import a file</Alert>);
     }
-    // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
     // Table styles
@@ -244,7 +236,7 @@ function OSLP() {
                 </Grid>
                 <Grid style={styles.flexItem}>
                     <Grid>
-                        <PlotlyPlotOSLP props={[time ? time : [], plotData ? plotData : [], 'Time', stage === 1 ? "Energy" : property, stage !== 1 ? "Selected data: " + `${selectedSub}` + ':' + `${selectedLine}` : "Flow of energy of: " + rankData[currSlope], selectedPoints, setSelectedPoints]} />
+                        <PlotlyPlotOSLP props={[time ? time : [], plotData ? plotData : [], 'Time[s]', stage === 1 ? "Energy" : property, stage !== 1 ? "Selected data: " + `${selectedSub}` + ':' + `${selectedLine}` : "Flow of energy of: " + rankData[currSlope], selectedPoints, setSelectedPoints]} />
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             {stage === 0 && selectedPoints.length === 2 && (
                                 <Typography>

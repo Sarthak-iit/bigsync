@@ -30,7 +30,6 @@ const PlotlyPlot = (props) => {
   return (
     <Plot
       data={traces}
-      onClick={(data)=>{console.log(data.points[0].x, data.points[0].y)}}
       layout={{
         title: title,
         xaxis: {

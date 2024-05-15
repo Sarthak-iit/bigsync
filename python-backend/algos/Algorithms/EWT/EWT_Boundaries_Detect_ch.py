@@ -8,7 +8,5 @@ def EWT_Boundaries_Detect_ch(f, params):
     method = params['detect'].lower()
     boundaries = []
     boundaries = EWT_LocalMaxMin_change(f, params['N'])
-    # print('ask', boundaries)
-    
     return boundaries
 

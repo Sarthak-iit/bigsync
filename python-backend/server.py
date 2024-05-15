@@ -66,7 +66,6 @@ class OSLPSettings(BaseModel):
 
 @app.get("/")
 def index():
-    print("Hi")
     return {"message": "Welcome to the API"}
 
 
@@ -79,8 +78,6 @@ async def classify_event_data(event_settings: EventClassificationSettings):
         event_settings.thresholdValues,
     )
     return res
-    # print(res)
-    # return {"error":1}
 
 @app.post("/v2/detect-event")
 async def detect_event(event_settings: EventDetectionSettings):
@@ -121,22 +118,15 @@ async def mode_analysis(event_settings: ModeAnalysisSettings):
     if not event_settings.data:
         raise HTTPException(status_code=400, detail="Bad request from the client")
     modes_data =  EWTmainFunction(event_settings.data)
-    # print("ewt working")
     ewt_data = modes_data["ewt"]
     prony_data = []
     for i in range(len(modes_data["Amp"])):
         selected_window = windowSelection(ewt_data[i], modes_data["InstEner"][i], modes_data["InstFreq"][i])
         if len(selected_window) > 0:
             x = pronyAnalysis(selected_window)
-            # print(x)
-            # if(x and abs(x[3]) < 12):
             prony_data.append(x+[modes_data["PerEner"][i]])
-            # else:
-            #     prony_data.append(None)
-            
         else:
             prony_data.append(None)
-    print(prony_data)
     filtered_modes_data = {
     "ewt": [],
     "Amp": [],

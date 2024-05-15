@@ -28,8 +28,6 @@ def EWT_LocalMaxMin_change(f, N, fm=None):
         N2 = []
         Imax = np.argsort(locmax)[::-1]
         lmax = np.sort(locmax)[::-1]
-#         print(Imax+1)
-#         plot(lmax)
         if locmax[Imax[0]] >= 3:
             Threshold = 3.5
         else:
@@ -51,7 +49,6 @@ def EWT_LocalMaxMin_change(f, N, fm=None):
         else:
             Imax = np.sort(Imax)
             N = len(lmax)
-        # print("N",N)
         bound = np.zeros(N)
         for i in range(N):
             if i == 0:
@@ -59,7 +56,6 @@ def EWT_LocalMaxMin_change(f, N, fm=None):
             else:
                 a = Imax[i - 1]
             lmin = np.sort(locmin[a:Imax[i]])
-            # print(lmin)
             ind = np.argsort(locmin[a:Imax[i]])
             if len(lmin) > 0:tmp = lmin[0]
             n = 1
@@ -70,11 +66,9 @@ def EWT_LocalMaxMin_change(f, N, fm=None):
                     n += 1
             
             if np.ceil(n / 2) < len(ind): bound[i] = a + ind[np.ceil(n / 2).astype(int)-1]
-        # print(i)
         
         Z = 2
         default = int(2 * len(f) * Z / 100.0)
-        # print(bound)
         if(i+1 >= len(bound)):bound = np.append(bound, Imax[-1] + default)
         else:bound[i + 1] = Imax[-1] + default
         Y = 20

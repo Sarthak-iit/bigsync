@@ -8,11 +8,12 @@ const makeRows = (rows, object) => {
   events.map((e, i) => {
     let row = { id: i, eventName: e, isDetected: String(object[e])}
     rows.push(row);
+    return null;
   })
   return rows;
 
 }
-let r = 0;
+
 const columns = [
   { field: 'id', headerName: 'ID', width: '50' },
   {
@@ -45,12 +46,10 @@ export default function EventDataGrid(props) {
 
   const result = props.props["result"];
   const data = props.props["data"];
-  // console.log(data.length)
   let rows = [];
   rows = makeRows(rows, result);
 
   const handleSelectionChange = (selection) => {
-    // console.log(selectedRowId)
     if (selection.length > 0) {
 
       setSelectedRowId((selection[selection.length - 1]));
@@ -60,8 +59,6 @@ export default function EventDataGrid(props) {
     }
   };
   const handleAction = () => {
-    r = selectedRowId;
-    console.log(eventData)
     setEventData(data[selectedRowId])
   };
 

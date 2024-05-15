@@ -15,7 +15,7 @@ const imageStyles = {
 
 const buttonStyle = {
   marginTop:'10px',
-  width:'20vw'
+  width:'30vw'
 }
 
 
@@ -85,7 +85,7 @@ const LandingPage = () => {
         setTimeout(() => {
           setisLoading(false);
 
-          navigate('/oscillation-characteristics', {
+          navigate('/oscillation-characterisation', {
             state: [subLnData, data, time],
           });
         }, 3000)
@@ -156,7 +156,7 @@ const LandingPage = () => {
         setTimeout(() => {
           setisLoading(false);
 
-          navigate('/oslp', {
+          navigate('/oscillation-source-location', {
             state: [subLnData, data, time],
           });
         }, 3000)

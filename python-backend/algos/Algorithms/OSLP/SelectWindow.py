@@ -1,5 +1,4 @@
 def SlctTWnd1(t, p_ln, td):
-    print(td)
     if td:
         tFrom = td[0]
         tTo = td[1]
@@ -18,8 +17,6 @@ def SlctTWnd1(t, p_ln, td):
         ted = len(t)
     else:
         ted = ted_ind
-
-    # print(tst, ted)
     t1 = t[tst:ted]
     p_ln_1 = p_ln[tst:ted]
 

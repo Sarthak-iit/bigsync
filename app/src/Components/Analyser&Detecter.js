@@ -60,7 +60,6 @@ function Analyser() {
     // --------------- handeling Button functions ------------------ // 
 
     const handleDetectFaultButton = () => {
-        // console.log('Mode set to detect-event')
         setButtonText('Send To Server');
         setMode(0);
 
@@ -91,7 +90,6 @@ function Analyser() {
     }
     const sendToServer = async (e) => {
         const serverData = await dataToServer([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property]], serverAddress + 'v2/detect-event', windowSize, sd_th);
-        // console.log('serverData', serverData);
         if (serverData.error) {
             if (serverData.error.message) {
                 setErr_message("Server error while detecting");
@@ -118,7 +116,6 @@ function Analyser() {
     const handleClassifyEvent = async (e) => {
 
         const classifiedData = await classifyEventData([time, data[`${selectedSub}` + ':' + `${selectedLine}`][property], thresholdValues], serverAddress + 'v2/classify-event');
-        console.log('classifiedData', classifiedData)
         if (classifiedData.error) {
             setErr_message(classifiedData.error.message);
         }
@@ -136,13 +133,11 @@ function Analyser() {
         }
     }
     const handleClassifyIslandingEvent = async (e) => {
-        // console.log('islandingEventData')
         let array = []
         islandingEventData.forEach((d) => {
             array.push(data[d]['F'])
         })
         const serverData = await dataToServer([time, array, thresholdValues], serverAddress + 'v2/detect-islanding-event', windowSize, sd_th);
-        // console.log('islanding data', serverData)
         if (serverData && !serverData.error) {
 
             navigate('/classify-event', {
@@ -172,7 +167,6 @@ function Analyser() {
         resetPlotData();
     }, [property])
     useEffect(() => {
-        // console.log('mode->0')
         setMode(0);
         setfaultData(null);
         setButtonText('Detect Event');
@@ -181,7 +175,6 @@ function Analyser() {
     if (!data) {
         return(<Alert severity="error">No Data found to analyze, Please import a file</Alert>);
     }
-    // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
     return (
@@ -236,7 +229,7 @@ function Analyser() {
                     <Grid>
 
                         {(!faultData) && <AnalysePlot props={[time ? time : [], plotData, data, property]} />}
-                        {(faultData) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time', 'Frequency', faultData["fault"] ? "Event Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
+                        {(faultData) && <PlotlyPlot props={[faultData.time ? faultData.time : [], faultData.freq ? faultData.freq : [], 'Time[s]', 'Frequency[Hz]', faultData["fault"] ? "Event Detected in " + `${selectedSub}` + ':' + `${selectedLine}` : "No event detected in " + `${selectedSub}` + ':' + `${selectedLine}`]} />}
                     </Grid>
                     <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
                         {mode === 0 && selectedSub && selectedLine && property === 'F' && plotData[0] && plotData[0].length > 0 && <Button variant="contained" onClick={handleDetectFaultButton}>{buttonText}</Button>}

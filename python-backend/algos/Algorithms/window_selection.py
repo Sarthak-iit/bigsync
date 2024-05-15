@@ -13,7 +13,6 @@ def findEnvelopeAndNatureOfMode(data):
         isStable = np.sum(np.gradient(data[peaks].flatten())) < 0
     except:
         isStable = data[peaks][0] < 0
-#     print(f"isStable: {isStable}")
     # return isStable
     return isStable
 

@@ -27,7 +27,7 @@ def EWT_LP_FilterBank(boundaries, N, cpx):
         gamma = r
     
     gamma = (1 - 1 / N) * gamma
-    # print("Gamma value:", gamma)
+
     
     Mi = N // 2
     w = np.arange(0, 2 * np.pi, 2 * np.pi / N)

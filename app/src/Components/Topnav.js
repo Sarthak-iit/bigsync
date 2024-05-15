@@ -16,6 +16,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import PlaceIcon from '@mui/icons-material/Place';
+import TimelineIcon from '@mui/icons-material/Timeline';
+
 import HomeIcon from '@mui/icons-material/Home';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -68,7 +71,6 @@ const Navabar = (props) => {
   }
   const handleImportFile =  (event) => {
     const file = event.target.files[0];
-    // console.log(this.props.location.pathname);
     // setSelectedFile(file); // Store the selected file in the context
      handleImportNewFileButton(file);
     
@@ -81,7 +83,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />, <AnalyticsIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <AnalyticsIcon />]
+  const icons = [<HomeIcon />, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />]
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -103,8 +105,8 @@ const Navabar = (props) => {
           { text: 'Home', href: '/' },
           { text: 'Analyse and Detect', href: '/analyse' },
           { text: 'Baseline', href: '/baseline' },
-          { text: 'Oscillation characteristics', href: '/oscillation-characteristics' },
-          { text: 'OSLP', href: '/oslp' }
+          { text: 'Oscillation Characterisation', href: '/oscillation-characterisation' },
+          { text: 'Oscillation Source Location', href: '/oscillation-source-location' }
           
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding>

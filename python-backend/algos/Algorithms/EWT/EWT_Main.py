@@ -46,7 +46,6 @@ def EWTmainFunction(f):
     tot_ener = np.sum([f[i]*f[i] for i in range(len(f))])
     ener_val = [np.sum(ewt[i] * ewt[i]) for i in range(len(ewt))]
     per_ener = (ener_val / tot_ener) * 100
-    print("Per energy", per_ener)
     ewt2 = []
     for i in range(len(per_ener)):
         if per_ener[i] > 3:

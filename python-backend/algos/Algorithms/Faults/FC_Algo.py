@@ -77,7 +77,6 @@ class EventClassification(FaultDetection):
                 t_min = curr_time_data[f_min_index]
                 if(abs(t_max - t_min) > 10 and abs(f_max - f_min) > th_step):
                     slope_avg = (f_min-f_max)/(t_min-t_max)
-                    # print(slope_avg)
                     if slope_avg < 0:
                         self.isGenLossEvent = True
                         return [curr_data.tolist(),time_data[i:i+win_size].tolist(),'gen']

@@ -4,14 +4,17 @@ const getInnermostValue = (arr) => arr.reduce((acc, val) => (Array.isArray(val) 
 
 const AnalysePlot = (props) => {
   let [xData, yDatas, data, property] = props.props;
-  console.log(yDatas)
   if (!xData || !yDatas || yDatas.length === 0) {
     xData=[];
     yDatas=[]
 
   }
-  // console.log('yDatas',yDatas)
-  // console.log('xData',xData);
+  let yTitle = "";
+  if(property === 'F'){yTitle = property + '[Hz]'}
+  if(property === 'VM'){yTitle = property + '[kV]'}
+  if(property === 'VA'){yTitle = property + '[degrees]'}
+  if(property === 'IM'){yTitle = property + '[Amps]'}
+  if(property === 'IA'){yTitle = property + '[degrees]'}
   const toPlot = yDatas.map((yData, i) => ({
     x:xData,
     y: data[yData]?data[yData][property].map(dataPoint => dataPoint):[],
@@ -26,10 +29,10 @@ const AnalysePlot = (props) => {
       layout={{
         // width: 1000, height: 450,
         xaxis: {
-          title: 'Time',
+          title: 'Time[s]',
         },
         yaxis: {
-          title: property,
+          title: yTitle,
         },
       }}
     />

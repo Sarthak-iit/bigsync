@@ -29,13 +29,13 @@ function Baseliner() {
         stats.map((e, i) => {
             let row = { id: i, statName: e, freq: Number(object["freq"][e]), rocof: Number(object["rocof"][e]) }
             rows.push(row);
+            return null;
         })
         return rows;
 
     }
-    console.log('statData', statData);
     let rows = makeRows(statData);
-    let r = 0;
+
     const columns = [
         { field: 'id', headerName: 'ID', width: '50' },
         {
@@ -62,13 +62,9 @@ function Baseliner() {
     //     setislandingEventData([[], []])
     // }
     const sendToServer = async (e) => {
-        console.log(selectedSub, selectedLine)
-        console.log(data[`${selectedSub}` + ':' + `${selectedLine}`]['F']);
         const serverData = await dataToServer([1, data[`${selectedSub}` + ':' + `${selectedLine}`]['F']], serverAddress + 'v2/find-statistics', 1, 1);
-        console.log('serverData', serverData);
         if (serverData.error) {
             if (serverData.error) {
-                console.log(serverData.error)
                 setErr_message('Server error while trying to check stats');
             }
             return
@@ -92,7 +88,6 @@ function Baseliner() {
         return(<Alert severity="error">No Data found!!!, Please import a file</Alert>);
     }
 
-    // if (selectedSub && selectedLine && property) { console.log(selectedSub, selectedLine, property) }
     // ---------------------------------------------------------//
 
     return (

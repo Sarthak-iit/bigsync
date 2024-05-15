@@ -4,7 +4,7 @@ import { Checkbox, Grid, Typography, Button, Alert } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import dataToServerModes from '../utils/dataToServerModes'
 import AlertDialog from './ErrorAlert'
 import { styles } from '../styles';
@@ -15,14 +15,14 @@ import LinearBuffer from './Loading';
 const serverAddress = GLOBAL.serverAddress;
 function ModeAnalysis() {
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const location = useLocation();
     const [subLnData, data, time] = location.state || [null, null, null];
     const [selectedSub, setSelectedSub] = useState(null);
     const [selectedLine, setSelectedLine] = useState(null);
-    const [property, setProperty] = React.useState('F');
+    const property = 'F';
     const [stage, setStage] = React.useState(null);
-    const [buttonText, setButtonText] = useState("Extract Modes")
+    const buttonText = "Extract Modes"
     const [plotData, setPlotData] = useState([[], []]);
     const [err_message, setErr_message] = React.useState();
     const [loading, setLoading] = useState(false);
@@ -140,7 +140,6 @@ function ModeAnalysis() {
             const temp2 = Object.fromEntries(
                 Object.entries(serverData).filter(([key]) => key === "Prony_data")
             );
-            console.log(temp1);
             setmodesData(temp1);
             setmodeCharacterisation(temp2["Prony_data"]);
             setPlotData(temp1[modesPlotChar][modesPlotIndex]);
@@ -183,7 +182,7 @@ function ModeAnalysis() {
             setplotLabelY("Magnitude");
         }
         else {
-            setplotLabelY("Frequency");
+            setplotLabelY("Frequency[Hz]");
         }
     }, [modesData, modesPlotChar, plotData, stage])
 
@@ -242,7 +241,7 @@ function ModeAnalysis() {
                 </Grid>
                 <Grid style={styles.flexItem}>
                     <Grid>
-                        <PlotlyPlot props={[time ? time : [], plotData ? plotData : [], 'Time', plotLabelY, "Selected data: " + `${selectedSub}` + ':' + `${selectedLine}`]} />
+                        <PlotlyPlot props={[time ? time : [], plotData ? plotData : [], 'Time[s]', plotLabelY, "Selected data: " + `${selectedSub}` + ':' + `${selectedLine}`]} />
                     </Grid>
                     <Grid container margin={2} direction={'column'} justifyContent={'center'} alignItems={'center'}>
                         {stage === 0 && selectedSub && selectedLine && plotData[0] && plotData.length > 0 && <Button variant="contained" onClick={handleExtractModeButton}>{buttonText}</Button>}

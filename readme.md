@@ -26,9 +26,7 @@ Before you begin, make sure you have the following software installed on your sy
 
     cd  python-backend
 ### Install backend dependencies
-	pip install fastapi
-	pip  install  numpy
-	pip install uvicorn
+	pip install -r requirements.txt
 
 ### Start the backend server
 	python server.py`

@@ -7,8 +7,6 @@ function MyBarChart({ values, xData,title }) {
   values.forEach((i)=>{
     v.push(Math.abs(i))
   })
-  console.log(v)
-  console.log(values)
   const trace = {
     x: xData,
     y: v,

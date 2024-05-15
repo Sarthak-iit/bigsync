@@ -11,7 +11,7 @@
 /python-backend/__pycache__
 # testing
 /coverage
-
+/video_demo
 # production
 /build
 

@@ -36,8 +36,8 @@ function App() {
               <Route path="/detect-event" element={<DetectEvent></DetectEvent>}></Route>
               <Route path="/classify-event" element={<Classify></Classify>}></Route>
               <Route path="/baseline" element={<Baseliner></Baseliner>}></Route>
-              <Route path="/oscillation-characteristics" element={<ModeAnalysis></ModeAnalysis>}></Route>
-              <Route path="/oslp" element={<OSLP></OSLP>}></Route>
+              <Route path="/oscillation-characterisation" element={<ModeAnalysis></ModeAnalysis>}></Route>
+              <Route path="/oscillation-source-location" element={<OSLP></OSLP>}></Route>
             </Routes>
           </BrowserRouter>
         </div>
