@@ -11,6 +11,9 @@ import Baseliner from './Components/Baseliner';
 import ModeAnalysis from './Components/Modes';
 import { indigo, purple } from '@mui/material/colors';
 import OSLP from './Components/OSLP'
+import GSFL from './Components/GSFL'
+import Contingency from './Components/Contingency'
+import PowerFlow from './Components/PowerFlowAnalysis'
 
 function App() {
   
@@ -38,6 +41,9 @@ function App() {
               <Route path="/baseline" element={<Baseliner></Baseliner>}></Route>
               <Route path="/oscillation-characterisation" element={<ModeAnalysis></ModeAnalysis>}></Route>
               <Route path="/oscillation-source-location" element={<OSLP></OSLP>}></Route>
+              <Route path="/gauss" element={<GSFL></GSFL>}></Route>
+              <Route path="/contingency" element={<Contingency></Contingency>}></Route>
+              <Route path="/powerflow" element={<PowerFlow></PowerFlow>}></Route>
             </Routes>
           </BrowserRouter>
         </div>
