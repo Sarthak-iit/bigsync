@@ -21,6 +21,8 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
 import InsightsIcon from '@mui/icons-material/Insights';
+import BoltIcon from '@mui/icons-material/Bolt';
+import FunctionsIcon from '@mui/icons-material/Functions';
 
 
 import HomeIcon from '@mui/icons-material/Home';
@@ -87,7 +89,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />,<InsightsIcon/>, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <CalculateIcon/>, <CrisisAlertIcon/>]
+  const icons = [<HomeIcon />,<InsightsIcon/>, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <CalculateIcon/>, <FunctionsIcon/>, <BoltIcon/>, <CrisisAlertIcon/>]
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -112,7 +114,9 @@ const Navabar = (props) => {
           { text: 'Baseline', href: '/baseline' },
           { text: 'Oscillation Characterisation', href: '/oscillation-characterisation' },
           { text: 'Oscillation Source Location', href: '/oscillation-source-location' },
-          { text: 'Gauss-Seidal Flow Solver', href: '/gauss' },
+          { text: 'Gauss-Seidal Load Flow Solver', href: '/gauss' },
+          { text: 'Newton-Raphson Load Flow Solver', href: '/newton' },
+          { text: 'Fast Decoupled Load Flow Solver', href: '/fdlf' },
           { text: 'Contingency Analysis', href: '/contingency'},
 
           

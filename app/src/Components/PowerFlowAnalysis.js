@@ -23,6 +23,14 @@ const PowerFlowAnalysis = () => {
     navigate("/gauss", { state: { selectedFile } });
   };
 
+  const handleNewtonRaphsonButton = () => {
+    navigate("/newton", { state: { selectedFile } });
+  };
+
+  const handleFastDecoupledButton = () => {
+    navigate("/fdlf", { state: { selectedFile } });
+  };
+
   const handleContingencyButton = () => {
     navigate("/contingency", { state: { selectedFile } });
   };
@@ -57,7 +65,27 @@ const PowerFlowAnalysis = () => {
                       size="large"
                       onClick={handleGaussSeidelButton}
                     >
-                      Gauss-Seidel Analysis
+                      Gauss-Seidel Load Flow
+                    </Button>}
+          {selectedFile && <Button
+                      style={buttonStyle}
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      onClick={handleNewtonRaphsonButton}
+                      disabled={!selectedFile}
+                    >
+                      Newton-Raphson Load Flow
+                    </Button>}
+          {selectedFile && <Button
+                      style={buttonStyle}
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      onClick={handleFastDecoupledButton}
+                      disabled={!selectedFile}
+                    >
+                      Fast Decoupled Load Flow
                     </Button>}
           {selectedFile && <Button
                       style={buttonStyle}
