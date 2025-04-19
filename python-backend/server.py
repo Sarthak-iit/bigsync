@@ -26,6 +26,7 @@ from gsfl.gsfl_algorithm import perform_gauss_seidel,calculate_Y_bus
 from gsfl.contingency_analysis import calculate_losf, calculate_gosf, calculate_base_flows
 from gsfl.nrlf_algorithm import perform_newton_raphson
 from gsfl.fdlf_algorithm import perform_fdlf
+from gsfl.dclf_algorithm import perform_dclf
 
 app = FastAPI()
 
@@ -187,6 +188,47 @@ async def fdlf(
         
         # Call your calculation function (ensure it returns correctly)
         result = perform_fdlf(Edata, Ndata,tolerance,max_iterations)
+        print(result)
+
+        if 'final_voltages' in result:
+            # Convert the complex numbers in final_voltages
+            final_voltages = result['final_voltages']
+            result['final_voltages'] = final_voltages
+
+
+        # Clean up: remove the temporary file after processing
+        os.remove(file_location)
+        print(result)
+        return JSONResponse(content={"result": result})
+
+    except Exception as e:
+        print(traceback.format_exc())
+        print("exception")
+        return JSONResponse(content={"error": str(e)}, status_code=400)
+
+@app.post("/v2/dclf")
+async def fdlf(
+    file: UploadFile = File(...),
+):
+    print(f"Received file: {file.filename}")
+       
+    try:
+        if not file:
+            raise HTTPException(status_code=400, detail="No file uploaded")
+
+        # Read the contents of the file
+        contents = await file.read()
+        file_location = f"temp/{file.filename}"
+        os.makedirs(os.path.dirname(file_location), exist_ok=True)  # Create temp directory if not exists
+        with open(file_location, "wb") as f:
+            f.write(contents)
+
+        # Read the Excel file into DataFrames
+        Edata = pd.read_excel(file_location, sheet_name=0).to_numpy()  # Reading elements data
+        Ndata = pd.read_excel(file_location, sheet_name=1).to_numpy()  # Reading nodes power data
+        
+        # Call your calculation function (ensure it returns correctly)
+        result = perform_dclf(Edata, Ndata)
         print(result)
 
         if 'final_voltages' in result:

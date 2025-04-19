@@ -14,6 +14,7 @@ import OSLP from './Components/OSLP'
 import GSLF from './Components/GSLF'
 import NRLF from './Components/NRLF'
 import FDLF from './Components/FDLF'
+import DCLF from './Components/DCLF'
 import Contingency from './Components/Contingency'
 import PowerFlow from './Components/PowerFlowAnalysis'
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="/gauss" element={<GSLF></GSLF>}></Route>
               <Route path="/newton" element={<NRLF></NRLF>}></Route>
               <Route path="/fdlf" element={<FDLF></FDLF>}></Route>
+              <Route path="/dclf" element={<DCLF></DCLF>}></Route>
               <Route path="/contingency" element={<Contingency></Contingency>}></Route>
               <Route path="/powerflow" element={<PowerFlow></PowerFlow>}></Route>
             </Routes>

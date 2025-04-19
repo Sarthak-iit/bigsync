@@ -35,6 +35,10 @@ const PowerFlowAnalysis = () => {
     navigate("/contingency", { state: { selectedFile } });
   };
 
+  const handleDCButton = () => {
+    navigate("/dclf", { state: { selectedFile } });
+  };
+
   return (
     <Container maxWidth="medium">
       <Box mt={4} textAlign="center">
@@ -86,6 +90,16 @@ const PowerFlowAnalysis = () => {
                       disabled={!selectedFile}
                     >
                       Fast Decoupled Load Flow
+                    </Button>}
+          {selectedFile && <Button
+                      style={buttonStyle}
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      onClick={handleDCButton}
+                      disabled={!selectedFile}
+                    >
+                      DC Load Flow
                     </Button>}
           {selectedFile && <Button
                       style={buttonStyle}
