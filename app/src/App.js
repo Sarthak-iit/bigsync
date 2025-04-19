@@ -9,6 +9,8 @@ import Classify from './Components/ClassifyEvent'
 import Analyser from './Components/Analyser&Detecter';
 import Baseliner from './Components/Baseliner';
 import ModeAnalysis from './Components/Modes';
+import FaultClassification from './Components/FaultClassificationSequenceComp';
+import FaultDetection from './Components/FaultDetection';
 import { indigo, purple } from '@mui/material/colors';
 import OSLP from './Components/OSLP'
 
@@ -38,6 +40,8 @@ function App() {
               <Route path="/baseline" element={<Baseliner></Baseliner>}></Route>
               <Route path="/oscillation-characterisation" element={<ModeAnalysis></ModeAnalysis>}></Route>
               <Route path="/oscillation-source-location" element={<OSLP></OSLP>}></Route>
+              <Route path="/faultclassification" element={<FaultClassification></FaultClassification>}></Route>
+              <Route path="/faultDetection" element={<FaultDetection></FaultDetection>}></Route>{/**/}
             </Routes>
           </BrowserRouter>
         </div>

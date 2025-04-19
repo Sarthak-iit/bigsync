@@ -4,10 +4,15 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import BaseModel
 from fastapi import HTTPException
+import io
+from fastapi.responses import JSONResponse
+
 import numpy as np 
 from typing import List, Dict
 
 import json
+import pandas as pd
+from io import BytesIO
 from algos.event_detection import eventDetection
 from algos.event_classification import eventClassification
 from algos.event_classification_islanding import classifyIslandingEvent
@@ -17,6 +22,9 @@ from typing import List
 from algos.Algorithms.window_selection import windowSelection
 from algos.Algorithms.Prony.prony3 import pronyAnalysis
 from algos.Algorithms.OSLP.main import oslp_main
+from algos.faultClassificationSC import faultClassificationSequenceComponents
+from algos.faultDetectionSample import faultClassificationSampleToSample
+from algos.faultDetectionCycle import faultClassificationCycleToCycle
 app = FastAPI()
 
 # Allow requests from all origins
@@ -157,6 +165,49 @@ async def oslp_analysis(event_settings: OSLPSettings):
     #     event_settings.data
     # )
     return res
+
+
+@app.post("/v2/FCSQ")
+async def FCSQ(file: UploadFile = File(...), totalTime: float = Form(...), faultTimeInstant: float = Form(...), faultDuration: float = Form(...)):
+    try:
+        import openpyxl
+        file_content = await file.read()
+        excel_data = pd.read_excel(io.BytesIO(file_content), engine="openpyxl")
+        
+        response_data = faultClassificationSequenceComponents(
+            excel_data, totalTime, faultTimeInstant, faultDuration
+        )
+        return JSONResponse(content=response_data)
+    except ImportError:
+        raise HTTPException(status_code=500, detail="Missing required dependency: openpyxl. Install it using `pip install openpyxl`.")
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/v2/FD")
+async def FD(file: UploadFile = File(...), samplingRate: float = Form(...), threshold: float = Form(...), analysisTypeValue: float = Form(...)):
+    try:
+        # Read Excel file
+        import openpyxl
+        file_content = await file.read()
+        excel_data = pd.read_excel(io.BytesIO(file_content), engine="openpyxl")
+
+        # Call the appropriate function based on analysisTypeValue
+        if analysisTypeValue == 0.0:
+            mn_time, mx_time = faultClassificationSampleToSample(excel_data, threshold)
+        elif analysisTypeValue == 1.0:
+            mn_time, mx_time = faultClassificationCycleToCycle(excel_data, threshold, samplingRate)
+
+        # Return JSON response
+        if mn_time is not None and mx_time is not None:
+            return {"status": "Fault detected", "fault_start": mn_time, "fault_end": mx_time}
+        else:
+            return {"status": "No fault detected", "fault_start": None, "fault_end": None}
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
 
 
 @app.exception_handler(StarletteHTTPException)
