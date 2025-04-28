@@ -121,8 +121,6 @@ const Navabar = (props) => {
           { text: 'Fast Decoupled Load Flow Solver', href: '/fdlf' },
           { text: 'DC Load Flow Solver', href: '/dclf' },
           { text: 'Contingency Analysis', href: '/contingency'},
-
-          { text: 'Oscillation Source Location', href: '/oscillation-source-location' },
           { text: 'Fault Classification', href: '/faultclassification'},
           { text: 'Fault Detection', href: '/faultDetection'}//
           

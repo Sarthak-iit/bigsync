@@ -16,6 +16,8 @@
 # production
 /build
 
+/btp/*
+
 # misc
 .DS_Store
 .env.local
