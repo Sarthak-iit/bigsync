@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GLOBAL from '../GLOBAL';
-import Plot from '../utils/plot';
+import Plot from '../utils/plot_FC';
 import {
   Container,
   Typography,
@@ -15,8 +15,8 @@ const serverAddress = GLOBAL.serverAddress;
 
 const FaultAnalyzer = () => {
   const [totalTime, setTotalTime] = useState('');
-  const [faultTimeInstant, setFaultTimeInstant] = useState('');
-  const [faultDuration, setFaultDuration] = useState('');
+  const [faultStart, setFaultStart] = useState('');
+  const [faultEnd, setFaultEnd] = useState('');
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,8 +31,8 @@ const FaultAnalyzer = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append('totalTime', totalTime);
-    formData.append('faultTimeInstant', faultTimeInstant);
-    formData.append('faultDuration', faultDuration);
+    formData.append('faultStart', faultStart);
+    formData.append('faultEnd', faultEnd);
     formData.append('file', file);
 
 
@@ -82,7 +82,7 @@ const FaultAnalyzer = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
       {/* Form Container */}
       <Paper
         elevation={4}
@@ -114,10 +114,10 @@ const FaultAnalyzer = () => {
   
           <Box mb={2}>
             <TextField
-              label="Fault Time Instant"
+              label="Fault Start"
               type="number"
-              value={faultTimeInstant}
-              onChange={(e) => setFaultTimeInstant(e.target.value)}
+              value={faultStart}
+              onChange={(e) => setFaultStart(e.target.value)}
               fullWidth
               required
               variant="outlined"
@@ -126,10 +126,10 @@ const FaultAnalyzer = () => {
   
           <Box mb={2}>
             <TextField
-              label="Fault Duration"
+              label="Fault End"
               type="number"
-              value={faultDuration}
-              onChange={(e) => setFaultDuration(e.target.value)}
+              value={faultEnd}
+              onChange={(e) => setFaultEnd(e.target.value)}
               fullWidth
               required
               variant="outlined"

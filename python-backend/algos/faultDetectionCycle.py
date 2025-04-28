@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from .Algorithms.FaultClassification.DownSample import downsample_array
 
 def faultClassificationCycleToCycle(excel_data, threshold, f_s):
     # Load the Excel file
@@ -12,6 +13,10 @@ def faultClassificationCycleToCycle(excel_data, threshold, f_s):
     IA = fault_data["IA"].values        # Phase A Current
     IB = fault_data["IB"].values        # Phase B Current
     IC = fault_data["IC"].values        # Phase C Current
+
+    # dt = fault_data['Domain'].iloc[-1] - fault_data['Domain'].iloc[0]
+    # f_s = (len(fault_data)-1)/dt
+    # print(f_s)
 
     # Calculate samples per cycle
     N = int(f_s / 50)  # Samples per 50 Hz cycle
@@ -37,11 +42,24 @@ def faultClassificationCycleToCycle(excel_data, threshold, f_s):
     mn_time = min(filter(None, [mn_tm_a, mn_tm_b, mn_tm_c]), default=None)
     mx_time = max(filter(None, [mx_tm_a, mx_tm_b, mx_tm_c]), default=None)
 
-    # Print results
+    # Return results
     if mn_time is not None and mx_time is not None:
-        print(f"Fault detected between {mn_time:.4f} s and {mx_time:.4f} s")
+        return {
+            "status": "Fault detected",
+            "fault_start": mn_time, 
+            "fault_end": mx_time,
+            "domain": downsample_array(time).tolist(),
+            "IA": downsample_array(IA).tolist(),
+            "IB": downsample_array(IB).tolist(),
+            "IC": downsample_array(IC).tolist(),
+        }
     else:
-        print("No fault detected")
-
-    return (mn_time, mx_time)
-    # return {0, 1}
+        return {
+            "status": "No Fault detected",
+            "fault_start": mn_time, 
+            "fault_end": mx_time,
+            "domain": downsample_array(time).tolist(),
+            "IA": downsample_array(IA).tolist(),
+            "IB": downsample_array(IB).tolist(),
+            "IC": downsample_array(IC).tolist(),
+        }

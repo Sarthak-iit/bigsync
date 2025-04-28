@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from .Algorithms.FaultClassification.DownSample import downsample_array
 
 def faultClassificationSampleToSample(excel_data, threshold):
     # Load the Excel file
@@ -37,11 +38,26 @@ def faultClassificationSampleToSample(excel_data, threshold):
     mn_time = min(filter(None, [mn_tm_a, mn_tm_b, mn_tm_c]), default=None)
     mx_time = max(filter(None, [mx_tm_a, mx_tm_b, mx_tm_c]), default=None)
 
-    # Print results
-    if mn_time is not None and mx_time is not None:
-        print(f"Fault detected between {mn_time:.4f} s and {mx_time:.4f} s")
-    else:
-        print("No fault detected")
+    # print((len(fault_data)-1)/(fault_data['Domain'].iloc[-1]-fault_data['Domain'].iloc[0]))
 
-    return (mn_time, mx_time)
-    # return {0, 1}
+    # Return results
+    if mn_time is not None and mx_time is not None:
+        return {
+            "status": "Fault detected",
+            "fault_start": mn_time, 
+            "fault_end": mx_time,
+            "domain": downsample_array(time).tolist(),
+            "IA": downsample_array(IA).tolist(),
+            "IB": downsample_array(IB).tolist(),
+            "IC": downsample_array(IC).tolist(),
+        }
+    else:
+        return {
+            "status": "No Fault detected",
+            "fault_start": mn_time, 
+            "fault_end": mx_time,
+            "domain": downsample_array(time).tolist(),
+            "IA": downsample_array(IA).tolist(),
+            "IB": downsample_array(IB).tolist(),
+            "IC": downsample_array(IC).tolist(),
+        }

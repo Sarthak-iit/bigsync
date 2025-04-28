@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from .Algorithms.FaultClassification.DownSample import downsample_array
 
-def faultClassificationSequenceComponents(excel_data, sim_duration, faultInsatant, faultTime):
+def faultClassificationSequenceComponents(excel_data, sim_duration, faultStart, faultEnd):
     fault_data = excel_data
     fault_data.to_csv()
     fault_data.columns = fault_data.columns.str.strip()
@@ -153,9 +153,8 @@ def faultClassificationSequenceComponents(excel_data, sim_duration, faultInsatan
     err = 0
 
     sim_dur = sim_duration
-    fault_start = faultInsatant
-    falut_duration = faultTime
-    fault_end = fault_start + falut_duration
+    fault_start = faultStart
+    fault_end = faultEnd
     pre_fault_time = 0.2
 
 

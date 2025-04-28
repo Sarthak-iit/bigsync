@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import GLOBAL from '../GLOBAL';
+import Plot from '../utils/plot_FD';
+import { useNavigate } from 'react-router-dom';
+
 import {
   Container,
   Typography,
@@ -24,6 +27,8 @@ const FaultDetection = () => {
   const [analysisType, setAnalysisType] = useState('sample-to-sample');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const [plotData, setPlotData] = useState(null);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -55,8 +60,20 @@ const FaultDetection = () => {
             setResponse(`Error: ${serverData.error}`);
         } else if (serverData.status === "Fault detected") {
             setResponse(`Fault detected between ${serverData.fault_start} s and ${serverData.fault_end} s`);
+            setPlotData({
+              domain: serverData.domain, 
+              IA: serverData.IA,
+              IB: serverData.IB,
+              IC: serverData.IC,
+            });
         } else {
-            setResponse("No fault detected.");
+          setResponse("No fault detected.");
+          setPlotData({
+            domain: serverData.domain, 
+            IA: serverData.IA,
+            IB: serverData.IB,
+            IC: serverData.IC,
+          });
         }
     } catch (error) {
       setResponse('Error occurred while fetching the request.');
@@ -72,8 +89,13 @@ const FaultDetection = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 2, backgroundColor: "#f9f9f9" }}>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Paper elevation={4} 
+            sx={{ p: 4, 
+                  borderRadius: 2, 
+                  backgroundColor: "#f9f9f9",
+                  maxWidth: "500px",
+                  mx: "auto", }}>
         <Typography variant="h4" component="h2" gutterBottom textAlign="center">
           Fault Detector
         </Typography>
@@ -143,22 +165,69 @@ const FaultDetection = () => {
               type="submit"
               variant="contained"
               disabled={loading}
-              sx={{ width: 200 }}
+              sx={{ width: 200,
+                backgroundColor: loading ? "#fff" : "#4050b5",
+                color: loading ? "#4050b5" : "#fff",
+                border: "2px solid #4050b5",
+                "&:hover": { backgroundColor: loading ? "#ffffff" : "#303a8e" },
+                "&.Mui-disabled": { backgroundColor: "#ffffff", borderColor: "#4050b5" },
+               }}
             >
-              {loading ? <CircularProgress size={24} /> : "Detect Fault"}
+              {loading ? <CircularProgress size={24} sx={{ color: "#4050b5" }} /> : "Detect Fault"}
             </Button>
           </Box>
+          {loading && (
+            <Typography mt={3} textAlign="center">
+              Algorithm running in the background, please wait...
+            </Typography>
+          )}
         </form>
       </Paper>
 
+      {/* Result Container */}
       {response && (
-        <Paper elevation={3} sx={{ mt: 4, p: 3, textAlign: "center" }}>
+        <Paper elevation={3} sx={{ mt: 4, p: 3, textAlign: "center", maxWidth: "520px", mx: "auto" }}>
           <Typography variant="h6">Analysis Result</Typography>
           <Typography variant="body1">
             <strong>{response}</strong>
           </Typography>
         </Paper>
       )}
+
+      {response.includes("Fault detected") && (
+        <Paper elevation={3} sx={{ mt: 2, p: 2, textAlign: "center", maxWidth: 400, mx: "auto" }}>
+          <Typography variant="body1" mb={1}>
+            Ready to classify the detected fault?
+          </Typography>
+          <Button variant="contained" onClick={() => navigate("/faultclassification")}>
+            Go to Fault Classification
+          </Button>
+        </Paper>
+      )}
+
+
+      {/* Plot Container */}
+      {plotData && (
+        <Paper elevation={4} sx={{ marginBottom: 50, mt: 4, p: 3 }}>
+          <Typography variant="h6" textAlign="center" mb={2}>
+            Fault Analysis Plot
+          </Typography>
+          <Plot
+            data={plotData}
+            layout={{
+              title: "Fault Current Analysis",
+              xaxis: { title: "Time (s)", showgrid: true },
+              yaxis: { title: "Current Magnitude", showgrid: true },
+              plot_bgcolor: "#f8f9fa",
+              paper_bgcolor: "#ffffff",
+              margin: { t: 40, b: 50, l: 50, r: 50 },
+            }}
+            useResizeHandler
+            style={{ width: "700px", height: "80vh", minHeight: "600px" }}
+          />
+        </Paper>
+      )}
+      {}
     </Container>
   );
 };
