@@ -6,6 +6,9 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi import Query
+import io
+from fastapi.responses import JSONResponse
+
 import numpy as np 
 import traceback
 import os
@@ -13,6 +16,8 @@ import pandas as pd
 from typing import List, Dict
 
 import json
+import pandas as pd
+from io import BytesIO
 from algos.event_detection import eventDetection
 from algos.event_classification import eventClassification
 from algos.event_classification_islanding import classifyIslandingEvent
@@ -28,13 +33,16 @@ from gsfl.nrlf_algorithm import perform_newton_raphson
 from gsfl.fdlf_algorithm import perform_fdlf
 from gsfl.dclf_algorithm import perform_dclf
 
+from algos.faultClassificationSC import faultClassificationSequenceComponents
+from algos.faultDetectionSample import faultClassificationSampleToSample
+from algos.faultDetectionCycle import faultClassificationCycleToCycle
 app = FastAPI()
 
 # Allow requests from all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=["*"],  # Allow only this origin
+    allow_methods=["*"],  # You can restrict methods if needed
     allow_headers=["*"],
 )
 
@@ -402,6 +410,43 @@ async def oslp_analysis(event_settings: OSLPSettings):
     return res
 
 
+@app.post("/v2/FCSQ")
+async def FCSQ(file: UploadFile = File(...), totalTime: float = Form(...), faultStart: float = Form(...), faultEnd: float = Form(...)):
+    try:
+        file_content = await file.read()
+        excel_data = pd.read_excel(io.BytesIO(file_content))
+        
+        response_data = faultClassificationSequenceComponents(
+            excel_data, totalTime, faultStart, faultEnd
+        )
+        return JSONResponse(content=response_data)
+    except ImportError:
+        raise HTTPException(status_code=500, detail="Missing required dependency: openpyxl. Install it using `pip install openpyxl`.")
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/v2/FD")
+async def FD(file: UploadFile = File(...), samplingRate: float = Form(...), threshold: float = Form(...), analysisTypeValue: float = Form(...)):
+    try:
+        # Read Excel file
+        file_content = await file.read()
+        excel_data = pd.read_excel(io.BytesIO(file_content))
+
+        # Call the appropriate function based on analysisTypeValue
+        if analysisTypeValue == 0.0:
+            response_data = faultClassificationSampleToSample(excel_data, threshold)
+        elif analysisTypeValue == 1.0:
+            response_data = faultClassificationCycleToCycle(excel_data, threshold, samplingRate)
+
+        return JSONResponse(content=response_data)
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request, exc):
     return {"error": "An unexpected error occurred"}
@@ -413,3 +458,4 @@ async def validation_exception_handler(request, exc):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8080)
+

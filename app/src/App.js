@@ -9,6 +9,8 @@ import Classify from './Components/ClassifyEvent'
 import Analyser from './Components/Analyser&Detecter';
 import Baseliner from './Components/Baseliner';
 import ModeAnalysis from './Components/Modes';
+import FaultClassification from './Components/FaultClassificationSequenceComp';
+import FaultDetection from './Components/FaultDetection';
 import { indigo, purple } from '@mui/material/colors';
 import OSLP from './Components/OSLP'
 import GSLF from './Components/GSLF'
@@ -50,6 +52,8 @@ function App() {
               <Route path="/dclf" element={<DCLF></DCLF>}></Route>
               <Route path="/contingency" element={<Contingency></Contingency>}></Route>
               <Route path="/powerflow" element={<PowerFlow></PowerFlow>}></Route>
+              <Route path="/faultclassification" element={<FaultClassification></FaultClassification>}></Route>
+              <Route path="/faultDetection" element={<FaultDetection></FaultDetection>}></Route>{/**/}
             </Routes>
           </BrowserRouter>
         </div>

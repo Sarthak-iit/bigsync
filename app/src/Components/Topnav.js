@@ -24,6 +24,8 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import BoltIcon from '@mui/icons-material/Bolt';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt'; 
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot'; //
 
 import HomeIcon from '@mui/icons-material/Home';
 import { useState } from 'react'
@@ -89,7 +91,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />,<InsightsIcon/>, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <CalculateIcon/>, <FunctionsIcon/>, <BoltIcon/>, <OfflineBoltIcon/>, <CrisisAlertIcon/>]
+  const icons = [<HomeIcon />,<InsightsIcon/>, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <CalculateIcon/>, <FunctionsIcon/>, <BoltIcon/>, <OfflineBoltIcon/>, <CrisisAlertIcon/>, <ElectricBoltIcon/>, <TroubleshootIcon/>]//
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -120,6 +122,9 @@ const Navabar = (props) => {
           { text: 'DC Load Flow Solver', href: '/dclf' },
           { text: 'Contingency Analysis', href: '/contingency'},
 
+          { text: 'Oscillation Source Location', href: '/oscillation-source-location' },
+          { text: 'Fault Classification', href: '/faultclassification'},
+          { text: 'Fault Detection', href: '/faultDetection'}//
           
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding>

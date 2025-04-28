@@ -26,10 +26,10 @@ Before you begin, make sure you have the following software installed on your sy
 
     cd  python-backend
 ### Install backend dependencies
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 ### Start the backend server
-	python server.py`
+	python server.py
 
 
 ## Backend (Node.js) Setup
