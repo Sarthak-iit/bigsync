@@ -16,11 +16,8 @@ import {
   Tab,
   Box
 } from '@mui/material';
-import GLOBAL from '../GLOBAL'; // Assuming this contains the serverAddress
 import LinearBuffer from './Loading'; // Assuming you have a loading bar component
 import { useLocation, useNavigate } from "react-router-dom";
-
-const serverAddress = GLOBAL.serverAddress;
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

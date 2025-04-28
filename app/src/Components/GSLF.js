@@ -16,11 +16,8 @@ import {
   Tab,
   Box
 } from '@mui/material';
-import GLOBAL from '../GLOBAL'; // Assuming this contains the serverAddress
 import LinearBuffer from './Loading'; // Assuming you have a loading bar component
 import { useLocation, useNavigate } from "react-router-dom";
-
-const serverAddress = GLOBAL.serverAddress;
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,7 +43,6 @@ function GSLF() {
   const location = useLocation();
   // State variables for the file, acceleration factor, result, and loading status
   const [selectedFile, setSelectedFile] = useState(location.state?.selectedFile || null);
-  const [file, setFile] = useState(null);
   const [accelerationFactor, setAccelerationFactor] = useState(1.0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);

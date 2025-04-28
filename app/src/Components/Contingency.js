@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState} from "react";
 import {
   Button,
   TextField,
@@ -40,8 +40,6 @@ function ContingencyAnalysis() {
   }
 };
 
-
-  const fileInputRef = useRef(null); // Ref for the file input
 
   const handleBackButton = () => {
     navigate("/powerflow", { state: { selectedFile } });

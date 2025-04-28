@@ -25,6 +25,9 @@ function DCLF() {
       event.target.value = null;
     }
   };
+  const handleBackButton = () => {
+    navigate("/powerflow", { state: { selectedFile } });
+  };
 
   const handleSubmit = async () => {
     if (!selectedFile) {
@@ -53,22 +56,41 @@ function DCLF() {
 
   return (
     <Box p={4}>
-      <Typography variant="h4" gutterBottom>DC Load Flow Solver</Typography>
-
-      {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Button variant="outlined" component="label" fullWidth>
-            {selectedFile ? selectedFile.name : "Upload File"}
-            <input type="file" hidden onChange={handleFileChange} accept=".csv,.xlsx" />
+      <Typography variant="h4">DC Load Flow Solver</Typography>
+      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+      <Grid container spacing={2} style={{ marginTop: "10px" }}>
+        <Grid item xs={12}>
+          {selectedFile ? (
+            <Typography variant="subtitle1" color="textSecondary">
+              Uploaded File: {selectedFile.name}
+            </Typography>
+          ) : (
+            <TextField
+              type="file"
+              onChange={handleFileChange}
+              inputProps={{
+                accept:
+                  ".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              }}
+              fullWidth
+            />
+          )}
+        </Grid>
+        <Grid item>
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={handleSubmit}>
+            Submit
           </Button>
         </Grid>
-        <Grid item xs={6} md={3}>
-          <Button variant="contained" fullWidth onClick={handleSubmit}>Submit</Button>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <Button variant="contained" color="secondary" fullWidth onClick={() => navigate("/powerflow", { state: { selectedFile } })}>Back</Button>
+        <Grid item>
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={handleBackButton}>
+            Back
+          </Button>
         </Grid>
       </Grid>
 
