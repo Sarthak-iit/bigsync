@@ -18,6 +18,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PlaceIcon from '@mui/icons-material/Place';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+import InsightsIcon from '@mui/icons-material/Insights';
+import BoltIcon from '@mui/icons-material/Bolt';
+import FunctionsIcon from '@mui/icons-material/Functions';
+import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt'; 
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot'; //
 
@@ -85,7 +91,7 @@ const Navabar = (props) => {
   const [state, setState] = useState({
     left: false,
   });
-  const icons = [<HomeIcon />, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <ElectricBoltIcon/>, <TroubleshootIcon/>]//
+  const icons = [<HomeIcon />,<InsightsIcon/>, <TimelineIcon />, <QueryStatsIcon />, <AnalyticsIcon />, <PlaceIcon />, <CalculateIcon/>, <FunctionsIcon/>, <BoltIcon/>, <OfflineBoltIcon/>, <CrisisAlertIcon/>, <ElectricBoltIcon/>, <TroubleshootIcon/>]//
   // Define the toggleDrawer function
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -105,9 +111,17 @@ const Navabar = (props) => {
       <List>
         {[
           { text: 'Home', href: '/' },
+          { text: 'Power-Flow Analysis', href: '/powerflow'},
           { text: 'Analyse and Detect', href: '/analyse' },
           { text: 'Baseline', href: '/baseline' },
           { text: 'Oscillation Characterisation', href: '/oscillation-characterisation' },
+          { text: 'Oscillation Source Location', href: '/oscillation-source-location' },
+          { text: 'Gauss-Seidal Load Flow Solver', href: '/gauss' },
+          { text: 'Newton-Raphson Load Flow Solver', href: '/newton' },
+          { text: 'Fast Decoupled Load Flow Solver', href: '/fdlf' },
+          { text: 'DC Load Flow Solver', href: '/dclf' },
+          { text: 'Contingency Analysis', href: '/contingency'},
+
           { text: 'Oscillation Source Location', href: '/oscillation-source-location' },
           { text: 'Fault Classification', href: '/faultclassification'},
           { text: 'Fault Detection', href: '/faultDetection'}//

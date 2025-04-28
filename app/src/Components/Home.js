@@ -188,8 +188,21 @@ const LandingPage = () => {
           Big Sync
         </Typography>
       </Box>
+
       <Box mt={4} textAlign="center">
+
         <FileInput props={[selectedFile, setSelectedFile]} />
+        {!selectedFile && <Button
+          style={buttonStyle}
+          variant="contained"
+          color="primary"
+          sx={{ margin: 2 }}
+          onClick={() => navigate('/powerflow')}
+        >
+          Go to Power Flow
+        </Button>
+
+        }
         <div style={{ display: 'flex', flexDirection: 'column', alignItems:'center' }}>
           {selectedFile && !isLoading && <Button
             style={buttonStyle}
